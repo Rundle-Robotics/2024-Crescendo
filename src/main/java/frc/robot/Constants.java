@@ -4,49 +4,34 @@
 
 package frc.robot;
 
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
- */
 public final class Constants {
+
   public static class OperatorConstants {
-    // Port numbers for driver and operator gamepads. These correspond with the numbers on the USB
-    // tab of the DriverStation
-    public static final int kDriverControllerPort = 0;
-    public static final int kOperatorControllerPort = 1;
+    public static final int DRIVER_CONTROLLER_PORT = 3;
+    public static final int SECONDARY_CONTROLLER_PORT = 5;
+    public static final int MAST_CAMERA_PORT = 0;
+    public static final int ARM_CAMERA_PORT = 1;
+    public static final int XBOX_LEFT_Y_AXIS = 1;
+    public static final int XBOX_RIGHT_Y_AXIS = 5;
+    public static final int XBOX_LEFT_X_AXIS = 0;
+    public static final int XBOX_RIGHT_X_AXIS = 4;
+    public static final int XBOX_LEFT_BUMBER = 6;
+    public static final int XBOX_RIGHT_BUMPER = 5;
+    public static final int XBOX_A_BUTTON = 1;
+    public static final int XBOX_B_BUTTON = 2;
+    public static final int XBOX_X_BUTTON = 3;
+    public static final int XBOX_Y_BUTTON = 4;
+    public static final int XBOX_BACK_BUTTON = 7;
+    public static final int XBOX_START_BUTTON = 8;
   }
 
-  public static class DrivetrainConstants {
-    // PWM ports/CAN IDs for motor controllers
-    public static final int kLeftRearID = 1;
-    public static final int kLeftFrontID = 2;
-    public static final int kRightRearID = 3;
-    public static final int kRightFrontID = 4;
-
-    // Current limit for drivetrain motors
-    public static final int kCurrentLimit = 60;
-  }
-
-  public static class LauncherConstants {
-    // PWM ports/CAN IDs for motor controllers
-    public static final int kFeederID = 5;
-    public static final int kLauncherID = 6;
-
-    // Current limit for launcher and feed wheels
-    public static final int kLauncherCurrentLimit = 80;
-    public static final int kFeedCurrentLimit = 80;
-
-    // Speeds for wheels when intaking and launching. Intake speeds are negative to run the wheels
-    // in reverse
-    public static final double kLauncherSpeed = 1;
-    public static final double kLaunchFeederSpeed = 1;
-    public static final double kIntakeLauncherSpeed = -1;
-    public static final double kIntakeFeederSpeed = -.2;
-
-    public static final double kLauncherDelay = 1;
+  public static class ControlConstants {
+    public static final double JOY_DEADBAND = 0.15;
+    public static final double ROTATION_MULT = 0.65;
+    public static final double ROTATION_DEADBAND = 0.1;
+    public static final double MAX_ROBOT_SPEED = 1;
+    public static final double MIN_ROBOT_SPEED = -1;
+    public static final double MAX_TURN_SPEED = 0.7;
+    public static final double kDriveTick2Meter = 1.0 / 4096.0 * 0.128 * Math.PI;
   }
 }
