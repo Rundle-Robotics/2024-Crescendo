@@ -26,11 +26,12 @@ public class LoadMotor extends SubsystemBase {
 
     loadMotor = new CANSparkMax(5, MotorType.kBrushless);
     loadMotorEncoder = loadMotor.getEncoder();
-    loadMotorPower = RobotContainer.driverController.getRightTriggerAxis()/4;
+    
   }
 
   @Override
   public void periodic() {
+    loadMotorPower = RobotContainer.driverController.getRightTriggerAxis()/4;
 
     loadMotor.set(loadMotorPower);
     // This method will be called once per scheduler run
