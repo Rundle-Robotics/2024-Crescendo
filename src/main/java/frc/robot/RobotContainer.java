@@ -4,8 +4,13 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.Autos;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -14,45 +19,36 @@ import frc.robot.Constants.OperatorConstants;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems are defined here.
- 
-  // private final CANLauncher m_launcher = new CANLauncher();
+  // The robot's subsystems and commands are defined here...
+  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
 
-  /*The gamepad provided in the KOP shows up like an XBox controller if the mode switch is set to X mode using the
-   * switch on the top.*/
-  public static final CommandXboxController driverController = new CommandXboxController(
-			OperatorConstants.DRIVER_CONTROLLER_PORT);
- 
+  // Replace with CommandPS4Controller or CommandJoystick if needed
+  private final CommandXboxController m_driverController =
+      new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
-  public RobotContainer() 
-  
-  {
+  public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
-
-    
-
   }
 
   /**
-   * Use this method to define your trigger->command mappings. Triggers can be accessed via the
-   * named factory methods in the Command* classes in edu.wpi.first.wpilibj2.command.button (shown
-   * below) or via the Trigger constructor for arbitary conditions
+   * Use this method to define your trigger->command mappings. Triggers can be created via the
+   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
+   * predicate, or via the named factories in {@link
+   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
+   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
+   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
+   * joysticks}.
    */
   private void configureBindings() {
-    // Set the default command for the drivetrain to drive using the joysticks
-   
+    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
+    new Trigger(m_exampleSubsystem::exampleCondition)
+        .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    /*Create an inline sequence to run when the operator presses and holds the A (green) button. Run the PrepareLaunch
-     * command for 1 seconds and then run the LaunchNote command */
-    
-        
-            
-
-    // Set up a binding to run the intake command while the operator is pressing and holding the
-    // left Bumper
-    
+    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
+    // cancelling on release.
+    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 
   /**
@@ -60,5 +56,8 @@ public class RobotContainer {
    *
    * @return the command to run in autonomous
    */
-  
+  public Command getAutonomousCommand() {
+    // An example command will be run in autonomous
+    return Autos.exampleAuto(m_exampleSubsystem);
+  }
 }
