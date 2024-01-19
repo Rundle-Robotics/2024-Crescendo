@@ -70,7 +70,9 @@ public class LimeTrack extends Command {
 
       double speed = tooFar ? SPEED : 0;
       double rotation = right ? SPEED : left ? -SPEED : 0;
-      
+
+      finite = !right && !left && !tooFar;
+
 
     }
   }
