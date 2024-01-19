@@ -12,7 +12,8 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.LaunchNote;
 import frc.robot.commands.PrepareLaunch;
-import frc.robot.subsystems.PWMDrivetrain;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.CANDrivetrain;
 import frc.robot.subsystems.PWMLauncher;
 import frc.robot.commands.LimeTrack;
 
@@ -27,10 +28,12 @@ import frc.robot.commands.LimeTrack;
  */
 public class RobotContainer {
   // The robot's subsystems are defined here.
-  private final PWMDrivetrain m_drivetrain = new PWMDrivetrain();
-  private final LimeTrack limetrack = new LimeTrack();
+  private final CANDrivetrain m_drivetrain = new CANDrivetrain();
+  private final LimeTrack m_limetrack = new LimeTrack();
   // private final CANDrivetrain m_drivetrain = new CANDrivetrain();
   private final PWMLauncher m_launcher = new PWMLauncher();
+
+  private final Limelight m_limelight = new Limelight();
   // private final CANLauncher m_launcher = new CANLauncher();
 
   /*The gamepad provided in the KOP shows up like an XBox controller if the mode switch is set to X mode using the
@@ -60,12 +63,7 @@ public class RobotContainer {
                     -m_driverController.getLeftY(), -m_driverController.getRightX()),
             m_drivetrain));
 
-    limelight.setDefaultCommand(
-        new RunCommand(
-            () ->
-                m_drivetrain.arcadeDrive(
-                    -m_driverController.getLeftY(), -m_driverController.getRightX()),
-            m_drivetrain));
+    
 
     /*Create an inline sequence to run when the operator presses and holds the A (green) button. Run the PrepareLaunch
      * command for 1 seconds and then run the LaunchNote command */
@@ -76,6 +74,13 @@ public class RobotContainer {
                 .withTimeout(LauncherConstants.kLauncherDelay)
                 .andThen(new LaunchNote(m_launcher))
                 .handleInterrupt(() -> m_launcher.stop()));
+
+     m_operatorController
+        .b()
+        .whileTrue(
+            new LimeTrack(m_drivetrain, m_limelight)
+                
+        );
 
     // Set up a binding to run the intake command while the operator is pressing and holding the
     // left Bumper
