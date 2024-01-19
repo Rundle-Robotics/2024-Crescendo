@@ -14,6 +14,7 @@ import frc.robot.commands.LaunchNote;
 import frc.robot.commands.PrepareLaunch;
 import frc.robot.subsystems.PWMDrivetrain;
 import frc.robot.subsystems.PWMLauncher;
+import frc.robot.commands.LimeTrack;
 
 // import frc.robot.subsystems.CANDrivetrain;
 // import frc.robot.subsystems.CANLauncher;
@@ -27,6 +28,7 @@ import frc.robot.subsystems.PWMLauncher;
 public class RobotContainer {
   // The robot's subsystems are defined here.
   private final PWMDrivetrain m_drivetrain = new PWMDrivetrain();
+  private final LimeTrack limetrack = new LimeTrack();
   // private final CANDrivetrain m_drivetrain = new CANDrivetrain();
   private final PWMLauncher m_launcher = new PWMLauncher();
   // private final CANLauncher m_launcher = new CANLauncher();
@@ -52,6 +54,13 @@ public class RobotContainer {
   private void configureBindings() {
     // Set the default command for the drivetrain to drive using the joysticks
     m_drivetrain.setDefaultCommand(
+        new RunCommand(
+            () ->
+                m_drivetrain.arcadeDrive(
+                    -m_driverController.getLeftY(), -m_driverController.getRightX()),
+            m_drivetrain));
+
+    limelight.setDefaultCommand(
         new RunCommand(
             () ->
                 m_drivetrain.arcadeDrive(
