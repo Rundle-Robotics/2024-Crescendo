@@ -73,6 +73,8 @@ public class LimeTrack extends Command {
 
       finite = !right && !left && !tooFar;
 
+      drivetrain.arcadeDrive(speed, rotation);
+
 
     }
   }
