@@ -6,7 +6,6 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.OperatorConstants;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-
 import frc.robot.RobotContainer;
 import frc.robot.Constants;
 import com.revrobotics.CANSparkLowLevel;
@@ -35,7 +34,9 @@ public class DriveTrain extends SubsystemBase {
     private double vel;
     private double pos;
     private double cpr;
+    public boolean finetuned;
     public DriveTrain() {
+        finetuned = false;
         FLmotor = new CANSparkMax(1, MotorType.kBrushless);
         FRmotor = new CANSparkMax(2, MotorType.kBrushless);
         BLmotor = new CANSparkMax(3, MotorType.kBrushless);
@@ -75,16 +76,22 @@ public class DriveTrain extends SubsystemBase {
         frontRight = power * sin/max - turnInside;
         backRight = power * cos/max - turnInside;
         if ((power + Math.abs(turn) > 1)) {
-            frontLeft /= powerInside + turnInside;
-            backLeft /= powerInside + turnInside;
-            frontRight /= powerInside + turnInside;
-            backRight /= powerInside + turnInside;
+            frontLeft /= powerInside + Math.abs(turnInside);
+            backLeft /= powerInside + Math.abs(turnInside);
+            frontRight /= powerInside + Math.abs(turnInside);
+            backRight /= powerInside + Math.abs(turnInside);
         }
         SmartDashboard.putNumber("frontRight", frontRight);
 		SmartDashboard.putNumber("frontLeft", frontLeft);
 		SmartDashboard.putNumber("backLeft", backLeft);
 		SmartDashboard.putNumber("backRight", backLeft);
         // set speed to motors
+        if (finetuned == true) {
+			frontRight = frontRight / 5;
+			frontLeft = frontLeft / 5;
+			backRight = backRight / 5;
+			backLeft = backLeft / 5;
+        }
         FLmotor.set(frontLeft);
         BLmotor.set(backLeft);
         FRmotor.set(frontRight);
@@ -136,5 +143,6 @@ public class DriveTrain extends SubsystemBase {
         }
         return cpr;
     }
+    
     
 }
