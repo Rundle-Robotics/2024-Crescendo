@@ -7,6 +7,14 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.OperatorConstants;
 import com.revrobotics.RelativeEncoder;
 public class DriveTrain {
+    private double sin;
+    private double cos;
+    private double max;
+    private double theta;
+    private double frontLeft;
+    private double frontRight;
+    private double backLeft;
+    private double backRight;
     public DriveTrain() {
          
     }
