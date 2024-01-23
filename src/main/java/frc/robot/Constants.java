@@ -15,5 +15,22 @@ package frc.robot;
 public final class Constants {
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
+    public static final int DRIVER_CONTROLLER_PORT = 3;
+    public static final int SECONDARY_CONTROLLER_PORT = 5;
+    public static final int MAST_CAMERA_PORT = 0;
+    public static final int ARM_CAMERA_PORT = 1;
+    public static final int XBOX_LEFT_Y_AXIS = 1;
+    public static final int XBOX_RIGHT_Y_AXIS = 5;
+    public static final int XBOX_LEFT_X_AXIS = 0;
+    public static final int XBOX_RIGHT_X_AXIS = 4;
+    public static final int XBOX_LEFT_BUMBER = 6;
+    public static final int XBOX_RIGHT_BUMPER = 5;
+    public static final int XBOX_A_BUTTON = 1;
+    public static final int XBOX_B_BUTTON = 2;
+    public static final int XBOX_X_BUTTON = 3;
+    public static final int XBOX_Y_BUTTON = 4;
+    public static final int XBOX_BACK_BUTTON = 7;
+    public static final int XBOX_START_BUTTON = 8;
+
   }
 }
