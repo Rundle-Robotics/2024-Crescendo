@@ -1,13 +1,15 @@
 package frc.robot.subsystems;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.OperatorConstants;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+
 import frc.robot.RobotContainer;
 import frc.robot.Constants;
+import com.revrobotics.CANSparkLowLevel;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 public class DriveTrain extends SubsystemBase {
     private double sin;
@@ -16,6 +18,10 @@ public class DriveTrain extends SubsystemBase {
     private double theta;
     private double turn;
     private double power;
+    private CANSparkMax FLmotor;
+    private CANSparkMax FRmotor;
+    private CANSparkMax BLmotor;
+    private CANSparkMax BRmotor;
     private double frontLeft;
     private double frontRight;
     private double backLeft;
@@ -27,6 +33,10 @@ public class DriveTrain extends SubsystemBase {
     private double x;
     private double y;
     public DriveTrain() {
+        FLmotor = new CANSparkMax(1, MotorType.kBrushless);
+        FRmotor = new CANSparkMax(2, MotorType.kBrushless);
+        BLmotor = new CANSparkMax(3, MotorType.kBrushless);
+        BRmotor = new CANSparkMax(4, MotorType.kBrushless);
 
     }
     @Override
@@ -56,6 +66,12 @@ public class DriveTrain extends SubsystemBase {
             frontRight /= powerInside + turnInside;
             backRight /= powerInside + turnInside;
         }
+        // set speed to motors
+        FLmotor.set(frontLeft);
+        BLmotor.set(backLeft);
+        FRmotor.set(frontRight);
+        BRmotor.set(backRight);
+
     }
     
 }
