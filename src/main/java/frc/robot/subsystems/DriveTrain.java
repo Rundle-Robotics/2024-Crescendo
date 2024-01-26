@@ -35,6 +35,7 @@ public class DriveTrain extends SubsystemBase {
     private double pos;
     private double cpr;
     public boolean finetuned;
+    private double powerInside;
     public DriveTrain() {
         finetuned = false;
         FLmotor = new CANSparkMax(1, MotorType.kBrushless);
@@ -59,27 +60,27 @@ public class DriveTrain extends SubsystemBase {
         x = RobotContainer.m_driverController.getRawAxis(OperatorConstants.XBOX_RIGHT_X_AXIS);
         y = RobotContainer.m_driverController.getRawAxis(OperatorConstants.XBOX_RIGHT_Y_AXIS);
         turn = RobotContainer.m_driverController.getRawAxis(OperatorConstants.XBOX_LEFT_X_AXIS);
-        theta = Math.atan2(y, x);
-        power = Math.hypot(x, y);
-        mecanumDrive(power, turn, theta);
+
     }
     
         
-    public void mecanumDrive(double powerInside, double turnInside, double theta) {
+    public void mecanumDrive(double x, double turnInside, double y) {
+        theta = Math.atan2(y, x);
+        powerInside = Math.hypot(x, y);
         sin = Math.sin(theta - Math.PI/4);
         cos = Math.cos(theta - Math.PI/4);
         max = Math.max(Math.abs(sin), Math.abs(cos));
     
 
-        frontLeft = power * cos/max + turnInside;
-        backLeft = power * sin/max + turnInside;
-        frontRight = power * sin/max - turnInside;
-        backRight = power * cos/max - turnInside;
-        if ((power + Math.abs(turn) > 1)) {
-            frontLeft /= powerInside + Math.abs(turnInside);
-            backLeft /= powerInside + Math.abs(turnInside);
-            frontRight /= powerInside + Math.abs(turnInside);
-            backRight /= powerInside + Math.abs(turnInside);
+        frontLeft = powerInside * cos/max + turnInside;
+        backLeft = powerInside * sin/max + turnInside;
+        frontRight = powerInside * sin/max - turnInside;
+        backRight = powerInside * cos/max - turnInside;
+        if ((powerInside + (Math.abs(turnInside)) > 1)) {
+            frontLeft /= powerInside + (Math.abs(turnInside));
+            backLeft /= powerInside + (Math.abs(turnInside));
+            frontRight /= powerInside + (Math.abs(turnInside));
+            backRight /= powerInside + (Math.abs(turnInside));
         }
         SmartDashboard.putNumber("frontRight", frontRight);
 		SmartDashboard.putNumber("frontLeft", frontLeft);
