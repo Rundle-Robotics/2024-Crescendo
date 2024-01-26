@@ -38,11 +38,11 @@ public class DriveTrain extends SubsystemBase {
     public DriveTrain() {
         finetuned = false;
         FLmotor = new CANSparkMax(1, MotorType.kBrushless);
-        FRmotor = new CANSparkMax(2, MotorType.kBrushless);
-        BLmotor = new CANSparkMax(3, MotorType.kBrushless);
-        BRmotor = new CANSparkMax(4, MotorType.kBrushless);
+        FRmotor = new CANSparkMax(4, MotorType.kBrushless);
+        BLmotor = new CANSparkMax(2, MotorType.kBrushless);
+        BRmotor = new CANSparkMax(3, MotorType.kBrushless);
         frontLefte = FLmotor.getEncoder();
-		frontRighte = FRmotor.getEncoder();
+		frontRighte = FRmotor.getEncoder();   
 		backLefte = BLmotor.getEncoder();
 		backRighte = BRmotor.getEncoder();
         FLmotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
@@ -61,11 +61,11 @@ public class DriveTrain extends SubsystemBase {
         turn = RobotContainer.m_driverController.getRawAxis(OperatorConstants.XBOX_LEFT_X_AXIS);
         theta = Math.atan2(y, x);
         power = Math.hypot(x, y);
-        mecanumDrive(power, turn);
+        mecanumDrive(power, turn, theta);
     }
     
         
-    public void mecanumDrive(double powerInside, double turnInside) {
+    public void mecanumDrive(double powerInside, double turnInside, double theta) {
         sin = Math.sin(theta - Math.PI/4);
         cos = Math.cos(theta - Math.PI/4);
         max = Math.max(Math.abs(sin), Math.abs(cos));
