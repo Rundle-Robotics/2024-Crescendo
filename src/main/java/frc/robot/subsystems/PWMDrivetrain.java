@@ -55,5 +55,15 @@ public class PWMDrivetrain extends SubsystemBase {
   public void periodic() {
     /*This method will be called once per scheduler run. It can be used for running tasks we know we want to update each
      * loop such as processing sensor data. Our drivetrain is simple so we don't have anything to put here */
+    double leftStick = getLeftY();
+    
+    if (getBButtonPressed()) {
+      leftStick /= 5;
+    }
+    
+    leftMotors[0].set(leftStick);
+    rightMotors[0].set(leftStick);
+    leftMotors[1].set(leftStick);
+    rightMotors[0].set(leftStick);
   }
 }
