@@ -79,6 +79,8 @@ public class DriveTrain extends SubsystemBase {
 			x = 0;
 		if (Math.abs(y) < ControlConstants.JOY_DEADBAND)
 			y = 0;
+        turnInside = turnInside * -1;
+        y = y * -1;
 
 
         theta = Math.atan2(y, x);
