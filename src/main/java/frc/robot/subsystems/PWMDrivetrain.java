@@ -51,19 +51,25 @@ public class PWMDrivetrain extends SubsystemBase {
     m_drivetrain.arcadeDrive(speed, rotation);
   }
 
-  @Override
-  public void periodic() {
-    /*This method will be called once per scheduler run. It can be used for running tasks we know we want to update each
-     * loop such as processing sensor data. Our drivetrain is simple so we don't have anything to put here */
-    double leftStick = getLeftY();
-    
+  public void DriveRobot() {
+    double leftStick = getLeftY(); //Gets the value of the left stick
+
+    //if the b button is pressed then divide the input (left stick) by 5
     if (getBButtonPressed()) {
       leftStick /= 5;
     }
-    
+
+    //set all the motors to the input
     leftMotors[0].set(leftStick);
     rightMotors[0].set(leftStick);
     leftMotors[1].set(leftStick);
     rightMotors[0].set(leftStick);
+  }
+  
+  @Override
+  public void periodic() {
+    /*This method will be called once per scheduler run. It can be used for running tasks we know we want to update each
+     * loop such as processing sensor data. Our drivetrain is simple so we don't have anything to put here */
+    
   }
 }
