@@ -70,6 +70,6 @@ public class PWMDrivetrain extends SubsystemBase {
   public void periodic() {
     /*This method will be called once per scheduler run. It can be used for running tasks we know we want to update each
      * loop such as processing sensor data. Our drivetrain is simple so we don't have anything to put here */
-    
+    DriveRobot();
   }
 }
