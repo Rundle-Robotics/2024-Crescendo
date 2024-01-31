@@ -10,6 +10,7 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants;
 import com.revrobotics.CANSparkLowLevel;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants.ControlConstants;
 public class DriveTrain extends SubsystemBase {
     private double sin;
     private double cos;
@@ -60,11 +61,26 @@ public class DriveTrain extends SubsystemBase {
         x = RobotContainer.m_driverController.getRawAxis(OperatorConstants.XBOX_RIGHT_X_AXIS);
         y = RobotContainer.m_driverController.getRawAxis(OperatorConstants.XBOX_RIGHT_Y_AXIS);
         turn = RobotContainer.m_driverController.getRawAxis(OperatorConstants.XBOX_LEFT_X_AXIS);
+        // strafe lock if necesary
+        // if (Math.abs(X) <= (Math.tan(0.26)) * Y) {
+		// 	X = 0;
+		// } else if (Math.abs(Y) <= (Math.tan(0.26)) * X) {
+		// 	Y = 0;
+		// }
+
 
     }
     
         
     public void mecanumDrive(double x, double turnInside, double y) {
+        if (Math.abs(turnInside) < ControlConstants.ROTATION_DEADBAND)
+			turnInside = 0;
+		if (Math.abs(x) < ControlConstants.JOY_DEADBAND)
+			x = 0;
+		if (Math.abs(y) < ControlConstants.JOY_DEADBAND)
+			y = 0;
+
+
         theta = Math.atan2(y, x);
         powerInside = Math.hypot(x, y);
         sin = Math.sin(theta - Math.PI/4);
