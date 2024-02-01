@@ -31,9 +31,9 @@ public class Drivetrain extends SubsystemBase {
    */
   public Drivetrain() {
     Spark leftFront = new Spark(1);
-    Spark leftRear = new Spark(2);
-    Spark rightFront = new Spark(3);
-    Spark rightRear = new Spark(4);
+    Spark leftRear = new Spark(0);
+    Spark rightFront = new Spark(2);
+    Spark rightRear = new Spark(3);
 
     leftRear.addFollower(leftFront);
     rightRear.addFollower(rightFront);
