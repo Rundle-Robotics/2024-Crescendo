@@ -49,12 +49,12 @@ public class Drivetrain extends SubsystemBase {
     
 
     // Invert the left side so both side drive forward with positive motor outputs
-    leftFront.setInverted(true);
-    rightFront.setInverted(false);
+    leftRear.setInverted(false);
+    rightRear.setInverted(true);
 
     // Put the front motors into the differential drive object. This will control all 4 motors with
     // the rears set to follow the fronts
-    m_drivetrain = new DifferentialDrive(leftFront, rightFront);
+    m_drivetrain = new DifferentialDrive(leftRear, rightRear);
   }
 
   /*Method to control the drivetrain using arcade drive. Arcade drive takes a speed in the X (forward/back) direction

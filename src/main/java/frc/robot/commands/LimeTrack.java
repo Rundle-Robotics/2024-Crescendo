@@ -8,9 +8,9 @@ public class LimeTrack extends Command {
   private Limelight limelight;
   private Drivetrain drivetrain;
 
-  private final double CENTER_DISTANCE = -10.2;
-	private final double TARGET_AREA_CUTOFF = 1.2;
-	private final double CENTER_DEADBAND = 5;
+  private final double CENTER_DISTANCE = 20;
+	private final double TARGET_AREA_CUTOFF = 0.45;
+	private final double CENTER_DEADBAND = 2.5;
 	private final double YAW_DEADBAND = 10;
 	private final double TARGET_YAW = 0;
 	private final double SPEED = 0.45;
