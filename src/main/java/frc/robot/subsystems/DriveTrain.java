@@ -37,6 +37,11 @@ public class DriveTrain extends SubsystemBase {
     private double cpr;
     public boolean finetuned;
     private double powerInside;
+    private static final double FRONT_LEFT_STRAFE_CORRECTION_CONSTANT = 0;
+	private static final double FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT = 0;
+	private static final double BACK_RIGHT_STRAFE_CORRECTION_CONSTANT = 0;
+	private static final double BACK_LEFT_STRAFE_CORRECTION_CONSTANT = 0;
+
     public DriveTrain() {
         finetuned = false;
         FLmotor = new CANSparkMax(1, MotorType.kBrushless);
@@ -100,6 +105,10 @@ public class DriveTrain extends SubsystemBase {
             frontRight /= powerInside + (Math.abs(turnInside));
             backRight /= powerInside + (Math.abs(turnInside));
         }
+        frontLeft *= 1 + (FRONT_LEFT_STRAFE_CORRECTION_CONSTANT * x);
+		frontRight *= 1 + (FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT * x);
+		backLeft *= 1 + (BACK_LEFT_STRAFE_CORRECTION_CONSTANT * x);
+		backRight *= 1 + (BACK_RIGHT_STRAFE_CORRECTION_CONSTANT * x);
         SmartDashboard.putNumber("frontRight", frontRight);
 		SmartDashboard.putNumber("frontLeft", frontLeft);
 		SmartDashboard.putNumber("backLeft", backLeft);
