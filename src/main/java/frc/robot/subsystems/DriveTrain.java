@@ -6,10 +6,6 @@ import frc.robot.RobotContainer;
 import frc.robot.Constants.OperatorConstants;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
-import frc.robot.RobotContainer;
-import frc.robot.Constants;
-import com.revrobotics.CANSparkLowLevel;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ControlConstants;
 public class DriveTrain extends SubsystemBase {
     private double sin;
@@ -39,8 +35,8 @@ public class DriveTrain extends SubsystemBase {
     private double powerInside;
     private static final double FRONT_LEFT_STRAFE_CORRECTION_CONSTANT = 0;
 	private static final double FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT = 0;
-	private static final double BACK_RIGHT_STRAFE_CORRECTION_CONSTANT = 0;
-	private static final double BACK_LEFT_STRAFE_CORRECTION_CONSTANT = 0;
+	private static final double BACK_RIGHT_STRAFE_CORRECTION_CONSTANT = 0.1;
+	private static final double BACK_LEFT_STRAFE_CORRECTION_CONSTANT = 0.1;
 
     public DriveTrain() {
         finetuned = false;
@@ -52,10 +48,10 @@ public class DriveTrain extends SubsystemBase {
 		frontRighte = FRmotor.getEncoder();   
 		backLefte = BLmotor.getEncoder();
 		backRighte = BRmotor.getEncoder();
-        FLmotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-		FRmotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-		BLmotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-		BRmotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+        FLmotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+		FRmotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+		BLmotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+		BRmotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
         FLmotor.setOpenLoopRampRate(1);
 		BLmotor.setOpenLoopRampRate(1);
 		FRmotor.setOpenLoopRampRate(1);
