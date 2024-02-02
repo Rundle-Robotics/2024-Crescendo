@@ -9,7 +9,7 @@ public class LimeTrack extends Command {
   private Drivetrain drivetrain;
 
   private final double CENTER_DISTANCE = 20;
-	private final double TARGET_AREA_CUTOFF = 0.45;
+	private final double TARGET_AREA_CUTOFF = 0.03;
 	private final double CENTER_DEADBAND = 2.5;
 	private final double YAW_DEADBAND = 10;
 	private final double TARGET_YAW = 0;
@@ -41,7 +41,7 @@ public class LimeTrack extends Command {
 
     limelight.enableLimelight();
 
-		limelight.setPipeline(0); // Pipeline 0 is for AprilTag detection
+		limelight.setPipeline(1); // Pipeline 0 is for AprilTag detection
 
 		finite = false;
 
@@ -65,7 +65,7 @@ public class LimeTrack extends Command {
       boolean tooFar = limelight.getTA() < (TARGET_AREA_CUTOFF);
 
       double speed = tooFar ? SPEED : 0;
-      double rotation = right ? SPEED : left ? -SPEED : 0;
+      double rotation = right ? -SPEED : left ? SPEED : 0;
 
       finite = !right && !left && !tooFar;
 
@@ -81,7 +81,7 @@ public class LimeTrack extends Command {
 
     limelight.disableLimelight();
 
-		limelight.setPipeline(2); 
+		limelight.setPipeline(1); 
   }
 
   // Returns true when the command should end.
