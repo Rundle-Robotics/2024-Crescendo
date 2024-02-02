@@ -12,6 +12,8 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.LaunchNote;
 import frc.robot.commands.PrepareLaunch;
+import frc.robot.subsystems.CANDrivetrain;
+
 import frc.robot.subsystems.PWMDrivetrain;
 import frc.robot.subsystems.PWMLauncher;
 
@@ -60,13 +62,34 @@ public class RobotContainer {
 
     /*Create an inline sequence to run when the operator presses and holds the A (green) button. Run the PrepareLaunch
      * command for 1 seconds and then run the LaunchNote command */
-    m_operatorController
-        .a()
+    m_driverController
+        .b()
         .whileTrue(
-            new PrepareLaunch(m_launcher)
-                .withTimeout(LauncherConstants.kLauncherDelay)
-                .andThen(new LaunchNote(m_launcher))
-                .handleInterrupt(() -> m_launcher.stop()));
+           new RunCommand(
+              () ->
+              m_drivetrain.DriveRobot(
+                  -m_driverController.getLeftY(), -m_driverController.getRightX()
+                  ),
+              m_drivetrain
+              )
+              );
+
+/**
+
+    SAMPLE CODE: ADDING INTAKE
+    m_driverController
+      .a()
+      .whileTrue(
+          new RunCommand(
+              () ->
+              m_intake.setspeed(0.7),
+              m_intake
+              )
+          .handleInterrupt(()-> m_intake.stop())
+      );
+
+
+**/
 
     // Set up a binding to run the intake command while the operator is pressing and holding the
     // left Bumper
