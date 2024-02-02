@@ -101,10 +101,10 @@ public class DriveTrain extends SubsystemBase {
             frontRight /= powerInside + (Math.abs(turnInside));
             backRight /= powerInside + (Math.abs(turnInside));
         }
-        frontLeft *= 1 + (FRONT_LEFT_STRAFE_CORRECTION_CONSTANT * x);
-		frontRight *= 1 + (FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT * x);
-		backLeft *= 1 + (BACK_LEFT_STRAFE_CORRECTION_CONSTANT * x);
-		backRight *= 1 + (BACK_RIGHT_STRAFE_CORRECTION_CONSTANT * x);
+        frontLeft *= 1 + (FRONT_LEFT_STRAFE_CORRECTION_CONSTANT);
+		frontRight *= 1 + (FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT);
+		backLeft *= 1 + (BACK_LEFT_STRAFE_CORRECTION_CONSTANT);
+		backRight *= 1 + (BACK_RIGHT_STRAFE_CORRECTION_CONSTANT);
         SmartDashboard.putNumber("frontRight", frontRight);
 		SmartDashboard.putNumber("frontLeft", frontLeft);
 		SmartDashboard.putNumber("backLeft", backLeft);
