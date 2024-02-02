@@ -25,7 +25,7 @@ import frc.robot.subsystems.Drivetrain;
 public class RobotContainer {
 
   private final Drivetrain m_drivetrain = new Drivetrain();
-  private final LimeTrack m_limeTrack = new LimeTrack();
+  private final LimeTrack m_limeTrack = new LimeTrack(m_drivetrain, null);
   // private final CANDrivetrain m_drivetrain = new CANDrivetrain();
   
 

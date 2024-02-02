@@ -19,14 +19,6 @@ public class LimeTrack extends Command {
   boolean finite;
 
 
-  /** Creates a new LimeTrack. */
-  public LimeTrack() {
-
-    
-
-    // Use addRequirements() here to declare subsystem dependencies.
-  }
-
   public LimeTrack(Drivetrain drivetrain, Limelight limelight) {
 		this.drivetrain = drivetrain;
 		this.limelight = limelight;
@@ -39,10 +31,7 @@ public class LimeTrack extends Command {
   @Override
   public void initialize() {
 
-    limelight.enableLimelight();
-
-		limelight.setPipeline(1); // Pipeline 0 is for AprilTag detection
-
+    
 		finite = false;
 
   }
@@ -79,9 +68,7 @@ public class LimeTrack extends Command {
   @Override
   public void end(boolean interrupted) {
 
-    limelight.disableLimelight();
-
-		limelight.setPipeline(1); 
+   System.out.println("command done");
   }
 
   // Returns true when the command should end.
