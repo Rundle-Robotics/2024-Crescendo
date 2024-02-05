@@ -33,10 +33,10 @@ public class DriveTrain extends SubsystemBase {
     private double cpr;
     public boolean finetuned;
     private double powerInside;
-    private static final double FRONT_LEFT_STRAFE_CORRECTION_CONSTANT = 0;
-	private static final double FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT = 0;
-	private static final double BACK_RIGHT_STRAFE_CORRECTION_CONSTANT = 0.1;
-	private static final double BACK_LEFT_STRAFE_CORRECTION_CONSTANT = 0.1;
+    private static final double FRONT_LEFT_STRAFE_CORRECTION_CONSTANT = 0.085;
+	private static final double FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT = 0.085;
+	private static final double BACK_RIGHT_STRAFE_CORRECTION_CONSTANT = 0;
+	private static final double BACK_LEFT_STRAFE_CORRECTION_CONSTANT = 0;
 
     public DriveTrain() {
         finetuned = false;
@@ -48,10 +48,10 @@ public class DriveTrain extends SubsystemBase {
 		frontRighte = FRmotor.getEncoder();   
 		backLefte = BLmotor.getEncoder();
 		backRighte = BRmotor.getEncoder();
-        FLmotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
-		FRmotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
-		BLmotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
-		BRmotor.setIdleMode(CANSparkMax.IdleMode.kCoast);
+        FLmotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+		FRmotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+		BLmotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
+		BRmotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
         FLmotor.setOpenLoopRampRate(1);
 		BLmotor.setOpenLoopRampRate(1);
 		FRmotor.setOpenLoopRampRate(1);
