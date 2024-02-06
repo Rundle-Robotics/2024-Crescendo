@@ -8,12 +8,12 @@ public class LimeTrack extends Command {
   private Limelight limelight;
   private Drivetrain drivetrain;
 
-  private final double CENTER_DISTANCE = 20;
-	private final double TARGET_AREA_CUTOFF = 0.03;
-	private final double CENTER_DEADBAND = 2.5;
+  private final double CENTER_DISTANCE = 0;
+	private final double TARGET_AREA_CUTOFF = 7;
+	private final double CENTER_DEADBAND = 1.0;
 	private final double YAW_DEADBAND = 10;
 	private final double TARGET_YAW = 0;
-	private final double SPEED = 0.45;
+	private final double SPEED = 0.6;
   
 
   boolean finite;
@@ -44,7 +44,7 @@ public class LimeTrack extends Command {
     limelight.putTargetPoseDataonSmartDashboard();
 
     if (limelight.getTV() == 0) {
-      drivetrain.arcadeDrive(0,0.45);
+      drivetrain.arcadeDrive(0,0.515);
 
 
     } else{
@@ -54,7 +54,8 @@ public class LimeTrack extends Command {
       boolean tooFar = limelight.getTA() < (TARGET_AREA_CUTOFF);
 
       double speed = tooFar ? SPEED : 0;
-      double rotation = right ? -SPEED : left ? SPEED : 0;
+      //double rotation = right ? -SPEED : left ? SPEED : 0;
+      double rotation = right ? limelight.getTX() * -0.025: left ? limelight.getTX() * -0.015 : 0; 
 
       finite = !right && !left && !tooFar;
 
