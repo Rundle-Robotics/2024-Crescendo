@@ -7,7 +7,9 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.LimeTrackMecanum;
 import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -23,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrain m_DriveTrain = new DriveTrain();
+  private final Limelight m_limelight = new Limelight();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public static final CommandXboxController m_driverController =
@@ -50,6 +53,11 @@ public class RobotContainer {
         ()->
         m_DriveTrain.mecanumDrive(m_driverController.getRightX(), m_driverController.getLeftX(),
          m_driverController.getRightY()), m_DriveTrain));
+
+         m_driverController
+        .b()
+        .whileTrue(
+            new LimeTrackMecanum(m_DriveTrain, m_limelight));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
