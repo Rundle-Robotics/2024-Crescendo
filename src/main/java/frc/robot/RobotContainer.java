@@ -10,6 +10,7 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LimeTrackMecanum;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -26,6 +27,7 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final DriveTrain m_DriveTrain = new DriveTrain();
   private final Limelight m_limelight = new Limelight();
+  public final Intake m_intake = new Intake();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public static final CommandXboxController m_driverController =
@@ -51,13 +53,33 @@ public class RobotContainer {
     m_DriveTrain.setDefaultCommand(
       new RunCommand(
         ()->
-        m_DriveTrain.mecanumDrive(m_driverController.getRightX(), m_driverController.getLeftX(),
-         m_driverController.getRightY()), m_DriveTrain));
+        m_DriveTrain.mecanumDrive(-m_driverController.getLeftX(), m_driverController.getRightX(),
+         -m_driverController.getLeftY()), m_DriveTrain));
 
          m_driverController
         .b()
         .whileTrue(
             new LimeTrackMecanum(m_DriveTrain, m_limelight));
+
+        m_driverController
+            .x()
+            .whileTrue(
+              new RunCommand(
+              () ->
+              m_intake.setspeed(1),
+              m_intake
+              )
+              .handleInterrupt(()-> m_intake.stop()));
+
+         m_driverController
+            .y()
+            .whileTrue(
+              new RunCommand(
+              () ->
+              m_intake.setspeed(-1.0),
+              m_intake
+              )
+              .handleInterrupt(()-> m_intake.stop()));
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

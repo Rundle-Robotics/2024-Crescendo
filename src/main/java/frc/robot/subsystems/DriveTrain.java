@@ -59,8 +59,8 @@ public class DriveTrain extends SubsystemBase {
     }
     @Override
     public void periodic() {
-        x = RobotContainer.m_driverController.getRawAxis(OperatorConstants.XBOX_RIGHT_X_AXIS);
-        y = RobotContainer.m_driverController.getRawAxis(OperatorConstants.XBOX_RIGHT_Y_AXIS);
+        x = -RobotContainer.m_driverController.getRawAxis(OperatorConstants.XBOX_RIGHT_X_AXIS);
+        y = -RobotContainer.m_driverController.getRawAxis(OperatorConstants.XBOX_RIGHT_Y_AXIS);
         turn = RobotContainer.m_driverController.getRawAxis(OperatorConstants.XBOX_LEFT_X_AXIS);
         // strafe lock if necesary
         // if (Math.abs(X) <= (Math.tan(0.26)) * Y) {
