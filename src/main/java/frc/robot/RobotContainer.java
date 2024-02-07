@@ -8,10 +8,13 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LimeTrackMecanum;
+import frc.robot.subsystems.ArmMotor;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -28,6 +31,8 @@ public class RobotContainer {
   private final DriveTrain m_DriveTrain = new DriveTrain();
   private final Limelight m_limelight = new Limelight();
   public final Intake m_intake = new Intake();
+  public final ArmMotor m_armmotor = new ArmMotor();
+  public final Shooter m_shootermotor = new Shooter();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public static final CommandXboxController m_driverController =
@@ -60,7 +65,7 @@ public class RobotContainer {
         .b()
         .whileTrue(
             new LimeTrackMecanum(m_DriveTrain, m_limelight));
-
+        // x is intake
         m_driverController
             .x()
             .whileTrue(
@@ -70,7 +75,7 @@ public class RobotContainer {
               m_intake
               )
               .handleInterrupt(()-> m_intake.stop()));
-
+        // y is eject
          m_driverController
             .y()
             .whileTrue(
@@ -80,6 +85,53 @@ public class RobotContainer {
               m_intake
               )
               .handleInterrupt(()-> m_intake.stop()));
+
+          // left bumper and right bumper to move arm, will reset after not held
+          // left 
+          m_driverController
+            .leftBumper()
+            .whileTrue(
+              new RunCommand(
+                () ->
+                m_armmotor.SetArmSpeed(0.2),
+                m_armmotor
+                )
+                .handleInterrupt(()-> m_armmotor.stop()));
+          // right
+          m_driverController
+            .rightBumper()
+            .whileTrue(
+              new RunCommand(
+                () ->
+                m_armmotor.SetArmSpeed(-0.2),
+                m_armmotor
+                )
+                .handleInterrupt(()-> m_armmotor.stop()));
+
+            // will use right and left triggers for shooter
+            // right
+            m_driverController
+              .rightTrigger()
+              .whileTrue(
+                new RunCommand(
+                  () ->
+                  // placeholder for shooter speed, test then change
+                  m_shootermotor.shooterSpeed(0.2),
+                  m_shootermotor
+                  )
+                  .handleInterrupt(()-> m_shootermotor.stop()));
+            // left
+            m_driverController
+              .leftTrigger()
+              .whileTrue(
+                new RunCommand(
+                  ()->
+                  m_shootermotor.shooterSpeed(-0.2),
+                  m_shootermotor
+                  )
+                  .handleInterrupt(()-> m_shootermotor.stop()));
+              
+        
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.

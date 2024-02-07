@@ -13,7 +13,7 @@ public class LimeTrackMecanum extends Command {
 	private final double CENTER_DEADBAND = 1.0;
 	private final double YAW_DEADBAND = 10;
 	private final double TARGET_YAW = 0;
-	private final double SPEED = 0.6;
+	private final double SPEED = 0.15;
   private final double strafe = 0;
   
 
@@ -45,7 +45,7 @@ public class LimeTrackMecanum extends Command {
     limelight.putTargetPoseDataonSmartDashboard();
 
     if (limelight.getTV() == 0) {
-      drivetrain.mecanumDrive(0, 0.515, 0);
+      drivetrain.mecanumDrive(0, 0.15, 0);
 
       // strafe is x forward speed is y and rotation is turn inside
 
@@ -59,12 +59,20 @@ public class LimeTrackMecanum extends Command {
 
       double speed = tooFar ? SPEED : 0;
       //double rotation = right ? -SPEED : left ? SPEED : 0;
-      double rotation = right ? limelight.getTX() * -0.025: left ? limelight.getTX() * -0.015 : 0; 
+      double rotation = right ? limelight.getTX() * 0.008: left ? limelight.getTX() * 0.008 : 0; 
+      
+      // henry code - rotation code above wouldn't work, would rotate opposite way
+      // could make it multiplied by -0.008 but even then the speed would be too 
+      // high and over correct multiple times
+      // also TX is + or - so you dont need ? and : for each case
+      // double rotation = limelight.getTX() / -60 + .1;
+
+      
       double strafe = 0; //placeholder 
 
       finite = !right && !left && !tooFar;
 
-      drivetrain.mecanumDrive(strafe, rotation, speed);
+      drivetrain.mecanumDrive(strafe, rotation, -speed);
 
 
     }
