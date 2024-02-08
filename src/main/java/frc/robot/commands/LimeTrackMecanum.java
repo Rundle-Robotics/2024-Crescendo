@@ -55,11 +55,15 @@ public class LimeTrackMecanum extends Command {
       boolean right = limelight.getTX() > (CENTER_DEADBAND + CENTER_DISTANCE);
       boolean left = limelight.getTX() < (CENTER_DISTANCE - CENTER_DEADBAND);
       boolean tooFar = limelight.getTA() < (TARGET_AREA_CUTOFF);
-      boolean notAligned = true; //placeholder
+      boolean notAlignedRight= limelight.getTARGETPOSECAMERA() > (CENTER_DEADBAND + CENTER_DISTANCE);
+      boolean notAlignedLeft= limelight.getTARGETPOSECAMERA() < (CENTER_DEADBAND - CENTER_DISTANCE);
+       
 
       double speed = tooFar ? SPEED : 0;
       //double rotation = right ? -SPEED : left ? SPEED : 0;
-      double rotation = right ? limelight.getTX() * 0.008: left ? limelight.getTX() * 0.008 : 0; 
+      double strafe = right ? limelight.getTX() * 0.008: left ? limelight.getTX() * 0.008 : 0; 
+
+      double rotation = notAlignedRight ? limelight.getTARGETPOSECAMERA() * 0.05 : notAlignedLeft ? limelight.getTARGETPOSECAMERA() * 0.05 : 0;
       
       // henry code - rotation code above wouldn't work, would rotate opposite way
       // could make it multiplied by -0.008 but even then the speed would be too 
@@ -68,9 +72,9 @@ public class LimeTrackMecanum extends Command {
       // double rotation = limelight.getTX() / -60 + .1;
 
       
-      double strafe = 0; //placeholder 
+      
 
-      finite = !right && !left && !tooFar;
+      finite = !right && !left && !tooFar && !notAlignedRight && !notAlignedLeft;
 
       drivetrain.mecanumDrive(strafe, rotation, -speed);
 
