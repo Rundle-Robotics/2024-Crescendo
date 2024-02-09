@@ -4,18 +4,21 @@
 
 package frc.robot.subsystems;
 
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class Shooter extends SubsystemBase {
+public class JamalShooter extends SubsystemBase {
   /** Creates a new Shooter. */
-  Spark shooterMotor;
-  public Shooter() {
-    shooterMotor = new Spark(4);
+  CANSparkMax shooterJamalMotor;
+  public JamalShooter() {
+    shooterJamalMotor = new CANSparkMax(7, MotorType.kBrushless);
   }
 
   public void shooterSpeed(double speed) {
-    shooterMotor.set(speed);
+    shooterJamalMotor.set(speed);
   }
-  public void stop() { shooterMotor.set(0); }
+  public void stop() { shooterJamalMotor.set(0); }
 }

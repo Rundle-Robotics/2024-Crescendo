@@ -11,7 +11,7 @@ import frc.robot.commands.LimeTrackMecanum;
 import frc.robot.subsystems.ArmMotor;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Limelight;
-import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.JamalShooter;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
@@ -32,7 +32,7 @@ public class RobotContainer {
   private final Limelight m_limelight = new Limelight();
   public final Intake m_intake = new Intake();
   public final ArmMotor m_armmotor = new ArmMotor();
-  public final Shooter m_shootermotor = new Shooter();
+  public final JamalShooter m_shootermotor = new JamalShooter();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public static final CommandXboxController m_driverController =
@@ -81,7 +81,7 @@ public class RobotContainer {
             .whileTrue(
               new RunCommand(
               () ->
-              m_intake.setspeed(-1.0),
+              m_intake.setspeed(-0.45),
               m_intake
               )
               .handleInterrupt(()-> m_intake.stop()));
@@ -116,7 +116,7 @@ public class RobotContainer {
                 new RunCommand(
                   () ->
                   // placeholder for shooter speed, test then change
-                  m_shootermotor.shooterSpeed(0.2),
+                  m_shootermotor.shooterSpeed(2.0),
                   m_shootermotor
                   )
                   .handleInterrupt(()-> m_shootermotor.stop()));
@@ -126,7 +126,7 @@ public class RobotContainer {
               .whileTrue(
                 new RunCommand(
                   ()->
-                  m_shootermotor.shooterSpeed(-0.2),
+                  m_shootermotor.shooterSpeed(-1.0),
                   m_shootermotor
                   )
                   .handleInterrupt(()-> m_shootermotor.stop()));
