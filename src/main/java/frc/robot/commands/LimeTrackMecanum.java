@@ -59,7 +59,7 @@ public class LimeTrackMecanum extends Command {
 
       double speed = tooFar ? SPEED : 0;
       //double rotation = right ? -SPEED : left ? SPEED : 0;
-      double rotation = right ? limelight.getTX() * 0.01: left ? limelight.getTX() * 0.01 : 0; 
+      double rotation = right ? (limelight.getTX() * 0.008): (left ? (limelight.getTX() * 0.008) : 0); 
       
       // henry code - rotation code above wouldn't work, would rotate opposite way
       // could make it multiplied by -0.008 but even then the speed would be too 

@@ -67,11 +67,11 @@ public class RobotContainer {
             new LimeTrackMecanum(m_DriveTrain, m_limelight));
         // x is intake
         m_driverController
-            .x()
+            .leftTrigger()
             .whileTrue(
               new RunCommand(
               () ->
-              m_intake.setspeed(1),
+              m_intake.setspeed(m_driverController.getLeftTriggerAxis()/1.2),
               m_intake
               )
               .handleInterrupt(()-> m_intake.stop()));
@@ -81,7 +81,7 @@ public class RobotContainer {
             .whileTrue(
               new RunCommand(
               () ->
-              m_intake.setspeed(-0.45),
+              m_intake.setspeed(-0.7),
               m_intake
               )
               .handleInterrupt(()-> m_intake.stop()));
@@ -122,7 +122,7 @@ public class RobotContainer {
                   .handleInterrupt(()-> m_shootermotor.stop()));
             // left
             m_driverController
-              .leftTrigger()
+              .leftBumper()
               .whileTrue(
                 new RunCommand(
                   ()->
