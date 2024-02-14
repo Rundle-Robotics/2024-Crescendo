@@ -61,22 +61,22 @@ public class RobotContainer {
         m_DriveTrain.mecanumDrive(-m_driverController.getLeftX(), m_driverController.getRightX(),
          -m_driverController.getLeftY()), m_DriveTrain));
 
-         m_driverController
+    m_driverController
         .b()
         .whileTrue(
             new LimeTrackMecanum(m_DriveTrain, m_limelight));
         // x is intake
-        m_driverController
-            .leftTrigger()
+    m_driverController
+            .x()
             .whileTrue(
               new RunCommand(
               () ->
-              m_intake.setspeed(m_driverController.getLeftTriggerAxis()/1.2),
+              m_intake.setspeed(0.7),
               m_intake
               )
               .handleInterrupt(()-> m_intake.stop()));
         // y is eject
-         m_driverController
+      m_driverController
             .y()
             .whileTrue(
               new RunCommand(
@@ -88,7 +88,7 @@ public class RobotContainer {
 
           // left bumper and right bumper to move arm, will reset after not held
           // left 
-          m_driverController
+      m_driverController
             .leftBumper()
             .whileTrue(
               new RunCommand(
@@ -98,7 +98,7 @@ public class RobotContainer {
                 )
                 .handleInterrupt(()-> m_armmotor.stop()));
           // right
-          m_driverController
+      m_driverController
             .rightBumper()
             .whileTrue(
               new RunCommand(
@@ -110,7 +110,7 @@ public class RobotContainer {
 
             // will use right and left triggers for shooter
             // right
-            m_driverController
+        m_driverController
               .rightTrigger()
               .whileTrue(
                 new RunCommand(
@@ -121,8 +121,8 @@ public class RobotContainer {
                   )
                   .handleInterrupt(()-> m_shootermotor.stop()));
             // left
-            m_driverController
-              .leftBumper()
+        m_driverController
+              .leftTrigger()
               .whileTrue(
                 new RunCommand(
                   ()->
