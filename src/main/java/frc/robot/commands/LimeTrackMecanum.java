@@ -11,10 +11,8 @@ public class LimeTrackMecanum extends Command {
   private final double CENTER_DISTANCE = 0;
 	private final double TARGET_AREA_CUTOFF = 7;
 	private final double CENTER_DEADBAND = 0.2;
-	private final double YAW_DEADBAND = 10;
-	private final double TARGET_YAW = 0;
 	private final double SPEED = 0.15;
-  private final double strafe = 0;
+  
   
 
   boolean finite;
@@ -40,14 +38,14 @@ public class LimeTrackMecanum extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double yaw = limelight.getTARGETPOSECAMERA()[5];
+    
 
     limelight.putTargetPoseDataonSmartDashboard();
 
     if (limelight.getTV() == 0) {
       drivetrain.mecanumDrive(0, 0.15, 0);
 
-      // strafe is x forward speed is y and rotation is turn inside
+      
 
 
     } else{
@@ -64,15 +62,6 @@ public class LimeTrackMecanum extends Command {
       double strafe = right ? limelight.getTX() * 0.008: left ? limelight.getTX() * 0.008 : 0; 
 
       double rotation = notAlignedRight ? limelight.getTARGETPOSECAMERA()[5] * 0.05 : notAlignedLeft ? limelight.getTARGETPOSECAMERA()[5] * 0.05 : 0;
-      
-      // henry code - rotation code above wouldn't work, would rotate opposite way
-      // could make it multiplied by -0.008 but even then the speed would be too 
-      // high and over correct multiple times
-      // also TX is + or - so you dont need ? and : for each case
-      // double rotation = limelight.getTX() / -60 + .1;
-
-      
-      
 
       finite = !right && !left && !tooFar && !notAlignedRight && !notAlignedLeft;
 
