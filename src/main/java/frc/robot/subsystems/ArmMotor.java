@@ -4,14 +4,16 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ArmMotor extends SubsystemBase {
   /** Creates a new ArmMotor. */
-  Spark ArmMotor;  
+  CANSparkMax ArmMotor;  
   public ArmMotor() {
-    ArmMotor = new Spark(3);
+    ArmMotor = new CANSparkMax(5, MotorType.kBrushless);
   }
 
   public void SetArmSpeed(double speed) {

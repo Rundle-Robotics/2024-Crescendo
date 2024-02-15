@@ -116,7 +116,7 @@ public class RobotContainer {
                 new RunCommand(
                   () ->
                   // placeholder for shooter speed, test then change
-                  m_shootermotor.shooterSpeed(2.0),
+                  m_shootermotor.shooterSpeed(0.79),
                   m_shootermotor
                   )
                   .handleInterrupt(()-> m_shootermotor.stop()));
@@ -126,7 +126,7 @@ public class RobotContainer {
               .whileTrue(
                 new RunCommand(
                   ()->
-                  m_shootermotor.shooterSpeed(-1.0),
+                  m_shootermotor.shooterSpeed(-0.79),
                   m_shootermotor
                   )
                   .handleInterrupt(()-> m_shootermotor.stop()));
