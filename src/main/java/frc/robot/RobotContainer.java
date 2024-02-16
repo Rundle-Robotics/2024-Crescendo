@@ -107,7 +107,7 @@ public class RobotContainer {
             .whileTrue(
               new RunCommand(
                 () ->
-                m_armmotor.SetArmSpeed(0.5),
+                m_armmotor.SetArmSpeed(0.3),
                 m_armmotor
                 )
                 .handleInterrupt(()-> m_armmotor.stop()));
@@ -117,7 +117,7 @@ public class RobotContainer {
             .whileTrue(
               new RunCommand(
                 () ->
-                m_armmotor.SetArmSpeed(-0.5),
+                m_armmotor.SetArmSpeed(-0.3),
                 m_armmotor
                 )
                 .handleInterrupt(()-> m_armmotor.stop()));
