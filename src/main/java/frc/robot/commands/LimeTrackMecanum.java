@@ -60,12 +60,14 @@ public class LimeTrackMecanum extends Command {
       double speed = tooFar ? SPEED : 0;
       //double rotation = right ? -SPEED : left ? SPEED : 0;
       double rotation = right ? (limelight.getTX() * 0.008): (left ? (limelight.getTX() * 0.008) : 0); 
+
+      if (limelight.getTA() >  (TARGET_AREA_CUTOFF - 6.8 )) {
+
+        rotation = notAlignedRight ? limelight.getTARGETPOSECAMERA()[4] * 0.002 : notAlignedLeft ? limelight.getTARGETPOSECAMERA()[4] * 0.002 : 0;
+
+      }
       
-      // henry code - rotation code above wouldn't work, would rotate opposite way
-      // could make it multiplied by -0.008 but even then the speed would be too 
-      // high and over correct multiple times
-      // also TX is + or - so you dont need ? and : for each case
-      // double rotation = limelight.getTX() / -60 + .1;
+      
 
       
       double strafe = 0; //placeholder 
