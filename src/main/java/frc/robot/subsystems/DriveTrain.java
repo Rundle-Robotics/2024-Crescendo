@@ -52,10 +52,10 @@ public class DriveTrain extends SubsystemBase {
 		FRmotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 		BLmotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
 		BRmotor.setIdleMode(CANSparkMax.IdleMode.kBrake);
-        FLmotor.setOpenLoopRampRate(1);
-		BLmotor.setOpenLoopRampRate(1);
-		FRmotor.setOpenLoopRampRate(1);
-		BRmotor.setOpenLoopRampRate(1);
+        // FLmotor.setOpenLoopRampRate(1);
+		// BLmotor.setOpenLoopRampRate(1);
+		// FRmotor.setOpenLoopRampRate(1);
+		// BRmotor.setOpenLoopRampRate(1);
     }
     @Override
     public void periodic() {
@@ -72,6 +72,7 @@ public class DriveTrain extends SubsystemBase {
 
     }
     
+    private boolean strafelock = true;
         
     public void mecanumDrive(double x, double turnInside, double y) {
         if (Math.abs(turnInside) < ControlConstants.ROTATION_DEADBAND)
@@ -81,7 +82,31 @@ public class DriveTrain extends SubsystemBase {
 		if (Math.abs(y) < ControlConstants.JOY_DEADBAND)
 			y = 0;
         turnInside = turnInside * -1;
-        y = y * -1;
+        y = y * -1 ;
+        x *= ControlConstants.MAX_STRAFE_SPEED;
+
+       if (strafelock)
+        {
+            if (Math.abs(x) >= Math.abs(y)) 
+            {
+                y = 0;
+            }
+            else if (Math.abs(y) > Math.abs(x))
+            {
+                x = 0;
+            }
+        }
+       
+
+        if (Math.abs(turnInside) <= 0.10) {
+            turnInside = 0;
+          }
+          else if (turnInside < -0.10) {
+            turnInside = (-0.555*(Math.pow(-1*(turnInside+0.1), 2)))-0.30;
+          }
+          else if (turnInside > 0.10) {
+            turnInside = (0.555*(Math.pow(turnInside-0.1, 2)))+0.30;
+          }
 
 
         theta = Math.atan2(y, x);
@@ -95,16 +120,30 @@ public class DriveTrain extends SubsystemBase {
         backLeft = powerInside * sin/max + turnInside;
         frontRight = powerInside * sin/max - turnInside;
         backRight = powerInside * cos/max - turnInside;
-        if ((powerInside + (Math.abs(turnInside)) > 1)) {
+
+
+        if ((powerInside + (Math.abs(turnInside))) > 1) {
             frontLeft /= powerInside + (Math.abs(turnInside));
             backLeft /= powerInside + (Math.abs(turnInside));
             frontRight /= powerInside + (Math.abs(turnInside));
             backRight /= powerInside + (Math.abs(turnInside));
         }
-        frontLeft *= 1 + (FRONT_LEFT_STRAFE_CORRECTION_CONSTANT);
-		frontRight *= 1 + (FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT);
-		backLeft *= 1 + (BACK_LEFT_STRAFE_CORRECTION_CONSTANT);
-		backRight *= 1 + (BACK_RIGHT_STRAFE_CORRECTION_CONSTANT);
+
+        if (y <= 0)
+        {
+            frontLeft *= 1 + (FRONT_LEFT_STRAFE_CORRECTION_CONSTANT);
+		    frontRight *= 1 + (FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT);
+		    backLeft *= 1 + (BACK_LEFT_STRAFE_CORRECTION_CONSTANT);
+		    backRight *= 1 + (BACK_RIGHT_STRAFE_CORRECTION_CONSTANT);
+        }
+        else 
+        {
+            frontLeft *= 1 + (BACK_RIGHT_STRAFE_CORRECTION_CONSTANT);
+		    frontRight *= 1 + (FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT/2);
+		    backLeft *= 1 + (BACK_RIGHT_STRAFE_CORRECTION_CONSTANT);
+		    backRight *= 1 + (FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT/2);
+        }
+        
         SmartDashboard.putNumber("frontRight", frontRight);
 		SmartDashboard.putNumber("frontLeft", frontLeft);
 		SmartDashboard.putNumber("backLeft", backLeft);
@@ -116,12 +155,13 @@ public class DriveTrain extends SubsystemBase {
 			backRight = backRight / 5;
 			backLeft = backLeft / 5;
         }
-        FLmotor.set(frontLeft);
-        BLmotor.set(backLeft);
-        FRmotor.set(frontRight);
-        BRmotor.set(backRight);
+        FLmotor.set(frontLeft * ControlConstants.MAX_ROBOT_SPEED);
+        BLmotor.set(backLeft * ControlConstants.MAX_ROBOT_SPEED);
+        FRmotor.set(frontRight * ControlConstants.MAX_ROBOT_SPEED);
+        BRmotor.set(backRight * ControlConstants.MAX_ROBOT_SPEED);
 
     }
+
     public double getMotorVelocity(double motorNumber) {
         if(motorNumber == 1) {
             vel = frontLefte.getVelocity();

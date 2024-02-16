@@ -42,6 +42,9 @@ public class RobotContainer {
   public static final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
+  public static final CommandXboxController m_operatorController = 
+      new CommandXboxController(OperatorConstants.SECONDARY_CONTROLLER_PORT);
+
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
@@ -97,7 +100,7 @@ public class RobotContainer {
             .whileTrue(
               new RunCommand(
                 () ->
-                m_armmotor.SetArmSpeed(0.6),
+                m_armmotor.SetArmSpeed(0.3),
                 m_armmotor
                 )
                 .handleInterrupt(()-> m_armmotor.stop()));
@@ -107,7 +110,7 @@ public class RobotContainer {
             .whileTrue(
               new RunCommand(
                 () ->
-                m_armmotor.SetArmSpeed(-0.6),
+                m_armmotor.SetArmSpeed(-0.3),
                 m_armmotor
                 )
                 .handleInterrupt(()-> m_armmotor.stop()));
@@ -130,7 +133,7 @@ public class RobotContainer {
               .whileTrue(
                 new RunCommand(
                   ()->
-                  m_shootermotor.shooterSpeed(-0.79),
+                  m_shootermotor.shooterSpeed(-0.4),
                   m_shootermotor
                   )
                   .handleInterrupt(()-> m_shootermotor.stop()));
@@ -138,7 +141,7 @@ public class RobotContainer {
 
         m_driverController.a().whileTrue(
           new ShooterCommand(m_shootermotor)
-          .withTimeout(0.5)
+          .withTimeout(1)
           .andThen(new IntakeShooterCommand(m_intake))
           .handleInterrupt(() -> m_shootermotor.stop())
         );
