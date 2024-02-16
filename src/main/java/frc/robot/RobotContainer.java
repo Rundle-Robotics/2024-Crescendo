@@ -8,6 +8,10 @@ import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LimeTrackMecanum;
+import frc.robot.commands.ShooterCommand;
+import frc.robot.commands.IntakeShooterCommand;
+
+
 import frc.robot.subsystems.ArmMotor;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Limelight;
@@ -130,6 +134,14 @@ public class RobotContainer {
                   m_shootermotor
                   )
                   .handleInterrupt(()-> m_shootermotor.stop()));
+
+
+        m_driverController.a().whileTrue(
+          new ShooterCommand(m_shootermotor)
+          .withTimeout(0.5)
+          .andThen(new IntakeShooterCommand(m_intake))
+          .handleInterrupt(() -> m_shootermotor.stop())
+        );
               
         
 
