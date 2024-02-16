@@ -71,7 +71,7 @@ public class RobotContainer {
             .whileTrue(
               new RunCommand(
               () ->
-              m_intake.setspeed(0.7),
+              m_intake.setspeed(0.9),
               m_intake
               )
               .handleInterrupt(()-> m_intake.stop()));
@@ -81,7 +81,7 @@ public class RobotContainer {
             .whileTrue(
               new RunCommand(
               () ->
-              m_intake.setspeed(-0.7),
+              m_intake.setspeed(-0.7 ),
               m_intake
               )
               .handleInterrupt(()-> m_intake.stop()));
@@ -93,7 +93,7 @@ public class RobotContainer {
             .whileTrue(
               new RunCommand(
                 () ->
-                m_armmotor.SetArmSpeed(0.2),
+                m_armmotor.SetArmSpeed(0.6),
                 m_armmotor
                 )
                 .handleInterrupt(()-> m_armmotor.stop()));
@@ -103,7 +103,7 @@ public class RobotContainer {
             .whileTrue(
               new RunCommand(
                 () ->
-                m_armmotor.SetArmSpeed(-0.2),
+                m_armmotor.SetArmSpeed(-0.6),
                 m_armmotor
                 )
                 .handleInterrupt(()-> m_armmotor.stop()));
