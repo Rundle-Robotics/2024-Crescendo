@@ -10,7 +10,7 @@ public class LimeTrackMecanum extends Command {
 
   private final double CENTER_DISTANCE = 0;
 	private final double TARGET_AREA_CUTOFF = 7;
-	private final double CENTER_DEADBAND = 0.2;
+	private final double CENTER_DEADBAND = 0.05;
 	private final double SPEED = 0.15;
   
   
