@@ -55,7 +55,9 @@ public class LimeTrackMecanum extends Command {
       boolean right = limelight.getTX() > (CENTER_DEADBAND + CENTER_DISTANCE);
       boolean left = limelight.getTX() < (CENTER_DISTANCE - CENTER_DEADBAND);
       boolean tooFar = limelight.getTA() < (TARGET_AREA_CUTOFF);
-      boolean notAligned = true; //placeholder
+      boolean notAlignedRight= limelight.getTARGETPOSECAMERA()[5] > (CENTER_DEADBAND + CENTER_DISTANCE);
+      boolean notAlignedLeft= limelight.getTARGETPOSECAMERA()[5] < (CENTER_DISTANCE - CENTER_DEADBAND);
+     
 
       double speed = tooFar ? SPEED : 0;
       //double rotation = right ? -SPEED : left ? SPEED : 0;
