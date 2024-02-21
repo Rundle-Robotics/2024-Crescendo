@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AutoStrafe;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LimeTrackMecanum;
@@ -21,6 +22,7 @@ import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -158,7 +160,9 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
+    return (new AutoStrafe(1, 0, 0, m_DriveTrain))
+    .andThen(new WaitCommand(2))
+    .andThen(new WaitCommand(2));
     // An example command will be run in autonomous
   }
 }
