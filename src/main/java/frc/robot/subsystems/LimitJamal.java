@@ -34,8 +34,7 @@ public void setMotorSpeed(double speed) {
     } else {
         if (bottomlimitSwitch.get()) {
             // We are going down and bottom limit is tripped so stop
-            armMotor.set(0);hy
-        } else {
+            armMotor.set(0);
             // We are going down but bottom limit is not tripped so go at commanded speed
             armMotor.set(speed);
         }
