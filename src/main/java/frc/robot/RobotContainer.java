@@ -90,7 +90,7 @@ public class RobotContainer {
             .whileTrue(
               new RunCommand(
               () ->
-              m_intake.setspeed(-0.7 ),
+              m_intake.setspeed(-0.7),
               m_intake
               )
               .handleInterrupt(()-> m_intake.stop()));
@@ -160,9 +160,13 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return (new AutoStrafe(1, 0, 0, m_DriveTrain))
+    return (new AutoStrafe(0, 0.5, 0, m_DriveTrain))
     .andThen(new WaitCommand(2))
-    .andThen(new WaitCommand(2));
+    .andThen(new AutoStrafe(0, 0, 0, m_DriveTrain))
+    .andThen(new ShooterCommand(m_shootermotor)
+    .withTimeout(1)
+    .andThen(new IntakeShooterCommand(m_intake))
+    .handleInterrupt(() -> m_shootermotor.stop()));
     // An example command will be run in autonomous
   }
 }
