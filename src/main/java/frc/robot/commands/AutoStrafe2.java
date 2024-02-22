@@ -48,7 +48,7 @@ public class AutoStrafe2 extends Command {
     targetPosY = initialPosY+y;
 
     pidx = new PIDController(0.1, 0.5, 0.1);
-    pidy = new PIDController(0.01, 0.01, 0.01);
+    pidy = new PIDController(0.1, 0.1, 0.1);
     
   }
 
@@ -58,8 +58,8 @@ public class AutoStrafe2 extends Command {
     currentY = meca.getMotorPosition(1);
     
     yspeed = pidy.calculate(currentY, targetPosY);
-    if (Math.abs(yspeed) > 0.5) {
-      yspeed = 0.5 * Math.signum(yspeed);
+    if (Math.abs(yspeed) > 0.3) {
+      yspeed = 0.3 * Math.signum(yspeed);
     }
     SmartDashboard.putNumber("y speed", yspeed);
     SmartDashboard.putBoolean("at setpoint", pidy.atSetpoint());
