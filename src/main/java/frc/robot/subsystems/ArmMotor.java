@@ -17,9 +17,12 @@ public class ArmMotor extends SubsystemBase {
 
  
   /** Creates a new ArmMotor. */
-  CANSparkMax armMotor;  
+  CANSparkMax armMotorOne;  
+  CANSparkMax armMotorTwo;
   public ArmMotor() {
-    armMotor = new CANSparkMax(5, MotorType.kBrushless);
+    armMotorOne = new CANSparkMax(5, MotorType.kBrushless);
+    armMotorTwo = new CANSparkMax(6, MotorType.kBrushless);
+    
   }
 
   public void SetArmSpeed(double speed) {
@@ -34,7 +37,8 @@ public class ArmMotor extends SubsystemBase {
     speed = 0; 
    }
 
-   armMotor.set(speed);
+   armMotorOne.set(speed);
+   armMotorTwo.set(-speed);
 
 
 
@@ -57,6 +61,7 @@ public class ArmMotor extends SubsystemBase {
         return bottomlimitSwitch.get();
     }
     public void stop() {
-        armMotor.set(0);
+        armMotorOne.set(0);
+        armMotorTwo.set(0);
     }
 }
