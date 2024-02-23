@@ -80,11 +80,11 @@ public class RobotContainer {
         .whileTrue(
             new LimeTrackMecanum(m_DriveTrain, m_limelight));
     m_operatorController
-        .b()
+        .povUp()
         .whileTrue(
             new RaiseToPosition(m_armmotor));
      m_operatorController
-        .y()
+        .povDown()
         .whileTrue(
             new LowerToPosition(m_armmotor));
         // x is intake
@@ -132,19 +132,19 @@ public class RobotContainer {
 
             // will use right and left triggers for shooter
             // right
-        // m_operatorController
-        //       .y()
-        //       .whileTrue(
-        //         new RunCommand(
-        //           () ->
-        //           // placeholder for shooter speed, test then change
-        //           m_shootermotor.shooterSpeed(0.79),
-        //           m_shootermotor
-        //           )
-        //           .handleInterrupt(()-> m_shootermotor.stop()));
-            // left
         m_operatorController
-              .x()
+              .y()
+              .whileTrue(
+                new RunCommand(
+                  () ->
+                  // placeholder for shooter speed, test then change
+                  m_shootermotor.shooterSpeed(0.79),
+                  m_shootermotor
+                  )
+                  .handleInterrupt(()-> m_shootermotor.stop()));
+            //left
+        m_operatorController
+            .x()
               .whileTrue(
                 new RunCommand(
                   ()->
