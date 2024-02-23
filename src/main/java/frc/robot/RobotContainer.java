@@ -148,20 +148,23 @@ public class RobotContainer {
           .andThen(new IntakeShooterCommand(m_intake))
           .handleInterrupt(() -> m_shootermotor.stop())
         );
-              
-        
-
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
   }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return (new AutoY(0, 15, 0, m_DriveTrain)
+    return (new AutoY(0, 20, 0, m_DriveTrain)
+    .andThen(new AutoStrafe(0,0,1,m_DriveTrain))
+      .withTimeout(1)
+    .andThen(new AutoStrafe(0,0,0,m_DriveTrain))
+    .andThen(new ShooterCommand(m_shootermotor))
+      .withTimeout(1)
+        .andThen(new IntakeShooterCommand(m_intake))
+          .handleInterrupt(() -> m_shootermotor.stop())
     .handleInterrupt(() -> AutoY.stop()));
 
     /* 
