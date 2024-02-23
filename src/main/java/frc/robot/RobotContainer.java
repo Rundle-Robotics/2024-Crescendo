@@ -161,7 +161,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return (new AutoStrafe2(0, 10, 0, m_DriveTrain)
+    return (new AutoStrafe2(0, 15, 0, m_DriveTrain)
     .handleInterrupt(() -> AutoStrafe2.stop()));
 
     /* 
