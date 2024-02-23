@@ -14,7 +14,8 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LimeTrackMecanum;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.IntakeShooterCommand;
-
+import frc.robot.commands.LowerToPosition;
+import frc.robot.commands.RaiseToPosition;
 
 import frc.robot.subsystems.ArmMotor;
 import frc.robot.subsystems.DriveTrain;
@@ -78,6 +79,14 @@ public class RobotContainer {
         .b()
         .whileTrue(
             new LimeTrackMecanum(m_DriveTrain, m_limelight));
+    m_operatorController
+        .b()
+        .whileTrue(
+            new RaiseToPosition(m_armmotor));
+     m_operatorController
+        .y()
+        .whileTrue(
+            new LowerToPosition(m_armmotor));
         // x is intake
     m_operatorController
             .rightBumper()
@@ -123,16 +132,16 @@ public class RobotContainer {
 
             // will use right and left triggers for shooter
             // right
-        m_operatorController
-              .y()
-              .whileTrue(
-                new RunCommand(
-                  () ->
-                  // placeholder for shooter speed, test then change
-                  m_shootermotor.shooterSpeed(0.79),
-                  m_shootermotor
-                  )
-                  .handleInterrupt(()-> m_shootermotor.stop()));
+        // m_operatorController
+        //       .y()
+        //       .whileTrue(
+        //         new RunCommand(
+        //           () ->
+        //           // placeholder for shooter speed, test then change
+        //           m_shootermotor.shooterSpeed(0.79),
+        //           m_shootermotor
+        //           )
+        //           .handleInterrupt(()-> m_shootermotor.stop()));
             // left
         m_operatorController
               .x()
@@ -145,7 +154,9 @@ public class RobotContainer {
                   .handleInterrupt(()-> m_shootermotor.stop()));
 
 
-        m_operatorController.a().whileTrue(
+        m_operatorController
+        .a()
+        .whileTrue(
           new ShooterCommand(m_shootermotor)
           .withTimeout(1)
           .andThen(new IntakeShooterCommand(m_intake))
