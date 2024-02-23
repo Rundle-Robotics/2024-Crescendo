@@ -4,13 +4,30 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.LimeTrackMecanum;
+import frc.robot.commands.ShooterCommand;
+import frc.robot.commands.IntakeShooterCommand;
+
+
+import frc.robot.subsystems.ArmMotor;
+import frc.robot.subsystems.DriveTrain;
+import frc.robot.subsystems.Limelight;
+import frc.robot.subsystems.JamalShooter;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -20,11 +37,20 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  private final DriveTrain m_DriveTrain = new DriveTrain();
+  private final Limelight m_limelight = new Limelight();
+  public final Intake m_intake = new Intake();
+  public final ArmMotor m_armmotor = new ArmMotor();
+  public final JamalShooter m_shootermotor = new JamalShooter();
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
+  public static final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
+
+  public static final CommandXboxController m_operatorController = 
+      new CommandXboxController(OperatorConstants.SECONDARY_CONTROLLER_PORT);
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -43,12 +69,105 @@ public class RobotContainer {
    */
   private void configureBindings() {
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+    m_DriveTrain.setDefaultCommand(
+      new RunCommand(
+        ()->
+        m_DriveTrain.mecanumDrive(-m_driverController.getLeftX(), m_driverController.getRightX()/1.3,
+         -m_driverController.getLeftY()), m_DriveTrain));
+
+    m_driverController
+        .b()
+        .whileTrue(
+            new LimeTrackMecanum(m_DriveTrain, m_limelight));
+        // x is intake
+    m_operatorController
+            .rightBumper()
+            .whileTrue(
+              new RunCommand(
+              () ->
+              m_intake.setspeed(0.9),
+              m_intake
+              )
+              .handleInterrupt(()-> m_intake.stop()));
+        // y is eject
+      m_operatorController
+            .leftBumper()
+            .whileTrue(
+              new RunCommand(
+              () ->
+              m_intake.setspeed(-0.7 ),
+              m_intake
+              )
+              .handleInterrupt(()-> m_intake.stop()));
+
+          // left bumper and right bumper to move arm, will reset after not held
+          // left 
+      m_operatorController
+            .leftTrigger()
+            .whileTrue(
+              new RunCommand(
+                () ->
+                m_armmotor.SetArmSpeed(0.5),
+                m_armmotor
+                )
+                .handleInterrupt(()-> m_armmotor.stop()));
+          // right
+      m_operatorController
+            .rightTrigger()
+            .whileTrue(
+              new RunCommand(
+                () ->
+                m_armmotor.SetArmSpeed(-0.5),
+                m_armmotor
+                )
+                .handleInterrupt(()-> m_armmotor.stop()));
+
+            // will use right and left triggers for shooter
+            // right
+        m_operatorController
+              .y()
+              .whileTrue(
+                new RunCommand(
+                  () ->
+                  // placeholder for shooter speed, test then change
+                  m_shootermotor.shooterSpeed(0.79),
+                  m_shootermotor
+                  )
+                  .handleInterrupt(()-> m_shootermotor.stop()));
+            // left
+        m_operatorController
+              .x()
+              .whileTrue(
+                new RunCommand(
+                  ()->
+                  m_shootermotor.shooterSpeed(-0.4),
+                  m_shootermotor
+                  )
+                  .handleInterrupt(()-> m_shootermotor.stop()));
+
+
+        m_operatorController.a().whileTrue(
+          new ShooterCommand(m_shootermotor)
+          .withTimeout(1)
+          .andThen(new IntakeShooterCommand(m_intake))
+          .handleInterrupt(() -> m_shootermotor.stop())
+        );
+              
+        
+
+    // m_driverController.x().onTrue(
+
+    //   new RunCommand(
+    //     () -> 
+    //     m_limitJamal.setMotorSpeed(m_limitJamal.getTopLimitSwitch() ? -0.5 : 0.7),
+    //     m_limitJamal
+    //   )
+    //   .until(() -> m_limitJamal.getTopLimitSwitch() ? m_limitJamal.getBottomLimitSwitch() : m_limitJamal.getTopLimitSwitch())
+    //   .handleInterrupt(() -> m_limitJamal.stop())
+    // );
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
   }
 
   /**
@@ -57,7 +176,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+    return null;
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
   }
 }
