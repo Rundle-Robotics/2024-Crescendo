@@ -29,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.subsystems.LimitJamal;
 
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -72,7 +73,7 @@ public class RobotContainer {
     m_DriveTrain.setDefaultCommand(
       new RunCommand(
         ()->
-        m_DriveTrain.mecanumDrive(-m_driverController.getLeftX(), m_driverController.getRightX(),
+        m_DriveTrain.mecanumDrive(-m_driverController.getLeftX(), m_driverController.getRightX()/1.3,
          -m_driverController.getLeftY()), m_DriveTrain));
 
     m_driverController
@@ -80,8 +81,8 @@ public class RobotContainer {
         .whileTrue(
             new LimeTrackMecanum(m_DriveTrain, m_limelight));
         // x is intake
-    m_driverController
-            .x()
+    m_operatorController
+            .rightBumper()
             .whileTrue(
               new RunCommand(
               () ->
@@ -90,8 +91,8 @@ public class RobotContainer {
               )
               .handleInterrupt(()-> m_intake.stop()));
         // y is eject
-      m_driverController
-            .y()
+      m_operatorController
+            .leftBumper()
             .whileTrue(
               new RunCommand(
               () ->
@@ -102,8 +103,8 @@ public class RobotContainer {
 
           // left bumper and right bumper to move arm, will reset after not held
           // left 
-      m_driverController
-            .leftBumper()
+      m_operatorController
+            .leftTrigger()
             .whileTrue(
               new RunCommand(
                 () ->
@@ -112,8 +113,8 @@ public class RobotContainer {
                 )
                 .handleInterrupt(()-> m_armmotor.stop()));
           // right
-      m_driverController
-            .rightBumper()
+      m_operatorController
+            .rightTrigger()
             .whileTrue(
               new RunCommand(
                 () ->
@@ -124,8 +125,8 @@ public class RobotContainer {
 
             // will use right and left triggers for shooter
             // right
-        m_driverController
-              .rightTrigger()
+        m_operatorController
+              .y()
               .whileTrue(
                 new RunCommand(
                   () ->
@@ -135,8 +136,8 @@ public class RobotContainer {
                   )
                   .handleInterrupt(()-> m_shootermotor.stop()));
             // left
-        m_driverController
-              .leftTrigger()
+        m_operatorController
+              .x()
               .whileTrue(
                 new RunCommand(
                   ()->
@@ -146,7 +147,7 @@ public class RobotContainer {
                   .handleInterrupt(()-> m_shootermotor.stop()));
 
 
-        m_driverController.a().whileTrue(
+        m_operatorController.a().whileTrue(
           new ShooterCommand(m_shootermotor)
           .withTimeout(1)
           .andThen(new IntakeShooterCommand(m_intake))
@@ -155,16 +156,16 @@ public class RobotContainer {
               
         
 
-    m_driverController.x().onTrue(
+    // m_driverController.x().onTrue(
 
-      new RunCommand(
-        () -> 
-        m_limitJamal.setMotorSpeed(m_limitJamal.getTopLimitSwitch() ? -0.7 : 0.7),
-        m_limitJamal
-      )
-      .until(() -> m_limitJamal.getTopLimitSwitch() ? m_limitJamal.getBottomLimitSwitch() : m_limitJamal.getTopLimitSwitch())
-      .handleInterrupt(() -> m_limitJamal.stop())
-    );
+    //   new RunCommand(
+    //     () -> 
+    //     m_limitJamal.setMotorSpeed(m_limitJamal.getTopLimitSwitch() ? -0.7 : 0.7),
+    //     m_limitJamal
+    //   )
+    //   .until(() -> m_limitJamal.getTopLimitSwitch() ? m_limitJamal.getBottomLimitSwitch() : m_limitJamal.getTopLimitSwitch())
+    //   .handleInterrupt(() -> m_limitJamal.stop())
+    // );
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
