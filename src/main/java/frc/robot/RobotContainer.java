@@ -14,7 +14,8 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LimeTrackMecanum;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.IntakeShooterCommand;
-
+import frc.robot.commands.LowerToPosition;
+import frc.robot.commands.RaiseToPosition;
 
 import frc.robot.subsystems.ArmMotor;
 import frc.robot.subsystems.DriveTrain;
@@ -78,9 +79,17 @@ public class RobotContainer {
         .b()
         .whileTrue(
             new LimeTrackMecanum(m_DriveTrain, m_limelight));
+    m_operatorController
+        .rightBumper()
+        .whileTrue(
+            new RaiseToPosition(m_armmotor));
+     m_operatorController
+        .leftBumper()
+        .whileTrue(
+            new LowerToPosition(m_armmotor));
         // x is intake
     m_operatorController
-            .rightBumper()
+            .rightTrigger()
             .whileTrue(
               new RunCommand(
               () ->
@@ -90,7 +99,7 @@ public class RobotContainer {
               .handleInterrupt(()-> m_intake.stop()));
         // y is eject
       m_operatorController
-            .leftBumper()
+            .leftTrigger()
             .whileTrue(
               new RunCommand(
               () ->
@@ -101,26 +110,7 @@ public class RobotContainer {
 
           // left bumper and right bumper to move arm, will reset after not held
           // left 
-      m_operatorController
-            .leftTrigger()
-            .whileTrue(
-              new RunCommand(
-                () ->
-                m_armmotor.SetArmSpeed(0.3),
-                m_armmotor
-                )
-                .handleInterrupt(()-> m_armmotor.stop()));
           // right
-      m_operatorController
-            .rightTrigger()
-            .whileTrue(
-              new RunCommand(
-                () ->
-                m_armmotor.SetArmSpeed(-0.3),
-                m_armmotor
-                )
-                .handleInterrupt(()-> m_armmotor.stop()));
-
             // will use right and left triggers for shooter
             // right
         m_operatorController
@@ -133,9 +123,9 @@ public class RobotContainer {
                   m_shootermotor
                   )
                   .handleInterrupt(()-> m_shootermotor.stop()));
-            // left
+            //left
         m_operatorController
-              .x()
+            .x()
               .whileTrue(
                 new RunCommand(
                   ()->
@@ -145,7 +135,9 @@ public class RobotContainer {
                   .handleInterrupt(()-> m_shootermotor.stop()));
 
 
-        m_operatorController.a().whileTrue(
+        m_operatorController
+        .a()
+        .whileTrue(
           new ShooterCommand(m_shootermotor)
           .withTimeout(1)
           .andThen(new IntakeShooterCommand(m_intake))
@@ -153,17 +145,6 @@ public class RobotContainer {
         );
               
         
-
-    // m_driverController.x().onTrue(
-
-    //   new RunCommand(
-    //     () -> 
-    //     m_limitJamal.setMotorSpeed(m_limitJamal.getTopLimitSwitch() ? -0.7 : 0.7),
-    //     m_limitJamal
-    //   )
-    //   .until(() -> m_limitJamal.getTopLimitSwitch() ? m_limitJamal.getBottomLimitSwitch() : m_limitJamal.getTopLimitSwitch())
-    //   .handleInterrupt(() -> m_limitJamal.stop())
-    // );
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
