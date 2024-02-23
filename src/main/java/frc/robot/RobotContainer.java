@@ -6,7 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoStrafe;
-import frc.robot.commands.AutoStrafe2;
+import frc.robot.commands.AutoY;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LimeTrackMecanum;
@@ -161,8 +161,8 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return (new AutoStrafe2(0, 15, 0, m_DriveTrain)
-    .handleInterrupt(() -> AutoStrafe2.stop()));
+    return (new AutoY(0, 15, 0, m_DriveTrain)
+    .handleInterrupt(() -> AutoY.stop()));
 
     /* 
     return (new AutoStrafe(0, 0.5, 0, m_DriveTrain))

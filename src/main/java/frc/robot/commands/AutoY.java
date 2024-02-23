@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveTrain;
 
-public class AutoStrafe2 extends Command {
+public class AutoY extends Command {
 
   static double x;
   double y;
@@ -31,7 +31,7 @@ public class AutoStrafe2 extends Command {
   double yspeed;
 
   /** Creates a new AutoStrafe2. */
-  public AutoStrafe2(double x2, double y2, double turn2, DriveTrain mecanumDrive) {
+  public AutoY(double x2, double y2, double turn2, DriveTrain mecanumDrive) {
     // Use addRequirements() here to declare subsystem dependencies.
     x = x2;
     y = y2;
@@ -58,8 +58,8 @@ public class AutoStrafe2 extends Command {
     currentY = meca.getMotorPosition(1);
     
     yspeed = pidy.calculate(currentY, targetPosY);
-    if (Math.abs(yspeed) > 0.3) {
-      yspeed = 0.3 * Math.signum(yspeed);
+    if (Math.abs(yspeed) > 0.2) {
+      yspeed = 0.2 * Math.signum(yspeed);
     }
     SmartDashboard.putNumber("y speed", yspeed);
     SmartDashboard.putBoolean("at setpoint", pidy.atSetpoint());
