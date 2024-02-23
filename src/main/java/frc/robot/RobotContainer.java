@@ -22,7 +22,11 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.JamalShooter;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.LimitJamal;
+import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 
 /**
@@ -39,7 +43,6 @@ public class RobotContainer {
   public final ArmMotor m_armmotor = new ArmMotor();
   public final JamalShooter m_shootermotor = new JamalShooter();
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final LimitJamal m_limitJamal = new LimitJamal();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public static final CommandXboxController m_driverController =
@@ -155,23 +158,12 @@ public class RobotContainer {
 
     //   new RunCommand(
     //     () -> 
-    //     m_limitJamal.setMotorSpeed(m_limitJamal.getTopLimitSwitch() ? -0.5 : 0.7),
+    //     m_limitJamal.setMotorSpeed(m_limitJamal.getTopLimitSwitch() ? -0.7 : 0.7),
     //     m_limitJamal
     //   )
     //   .until(() -> m_limitJamal.getTopLimitSwitch() ? m_limitJamal.getBottomLimitSwitch() : m_limitJamal.getTopLimitSwitch())
     //   .handleInterrupt(() -> m_limitJamal.stop())
     // );
-
-    m_driverController.x().onTrue(
-
-      new RunCommand(
-        () -> 
-        m_limitJamal.setMotorSpeed(m_limitJamal.getTopLimitSwitch() ? -0.7 : 0.7),
-        m_limitJamal
-      )
-      .until(() -> m_limitJamal.getTopLimitSwitch() ? m_limitJamal.getBottomLimitSwitch() : m_limitJamal.getTopLimitSwitch())
-      .handleInterrupt(() -> m_limitJamal.stop())
-    );
 
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
