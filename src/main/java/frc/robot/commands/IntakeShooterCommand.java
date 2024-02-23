@@ -23,7 +23,7 @@ public class IntakeShooterCommand extends Command {
   @Override
   public void initialize() {
 
-    m_intake.setspeed(0.7);
+    m_intake.setspeed(0.9);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

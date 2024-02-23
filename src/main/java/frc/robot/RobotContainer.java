@@ -43,7 +43,6 @@ public class RobotContainer {
   public final ArmMotor m_armmotor = new ArmMotor();
   public final JamalShooter m_shootermotor = new JamalShooter();
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public static final CommandXboxController m_driverController =
@@ -107,7 +106,7 @@ public class RobotContainer {
             .whileTrue(
               new RunCommand(
                 () ->
-                m_armmotor.SetArmSpeed(0.5),
+                m_armmotor.SetArmSpeed(0.3),
                 m_armmotor
                 )
                 .handleInterrupt(()-> m_armmotor.stop()));
@@ -117,7 +116,7 @@ public class RobotContainer {
             .whileTrue(
               new RunCommand(
                 () ->
-                m_armmotor.SetArmSpeed(-0.5),
+                m_armmotor.SetArmSpeed(-0.3),
                 m_armmotor
                 )
                 .handleInterrupt(()-> m_armmotor.stop()));
@@ -159,7 +158,7 @@ public class RobotContainer {
 
     //   new RunCommand(
     //     () -> 
-    //     m_limitJamal.setMotorSpeed(m_limitJamal.getTopLimitSwitch() ? -0.5 : 0.7),
+    //     m_limitJamal.setMotorSpeed(m_limitJamal.getTopLimitSwitch() ? -0.7 : 0.7),
     //     m_limitJamal
     //   )
     //   .until(() -> m_limitJamal.getTopLimitSwitch() ? m_limitJamal.getBottomLimitSwitch() : m_limitJamal.getTopLimitSwitch())

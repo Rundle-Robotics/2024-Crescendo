@@ -26,7 +26,7 @@ public class ShooterCommand extends Command {
   @Override
   public void initialize() {
     
-    m_shooter.shooterSpeed(0.76);
+    m_shooter.shooterSpeed(0.9);
 
 
   }
