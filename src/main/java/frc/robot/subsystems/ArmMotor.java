@@ -39,18 +39,6 @@ public class ArmMotor extends SubsystemBase {
 
    armMotorOne.set(speed);
    armMotorTwo.set(-speed);
-
-
-
-
-
-
-
-
-
-
-
-    
   }
 
     public boolean getTopLimitSwitch() {
