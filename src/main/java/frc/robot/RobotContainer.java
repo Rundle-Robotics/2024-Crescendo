@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -14,8 +15,12 @@ import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.LimeTrackMecanum;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.IntakeShooterCommand;
-
-
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ArmMotor;
 import frc.robot.subsystems.DriveTrain;
 import frc.robot.subsystems.Limelight;
@@ -23,6 +28,8 @@ import frc.robot.subsystems.JamalShooter;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -37,6 +44,8 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  */
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
+  private static UsbCamera IntakeCAM;
+  private static NetworkTableEntry cameraSelection;
   private final DriveTrain m_DriveTrain = new DriveTrain();
   private final Limelight m_limelight = new Limelight();
   public final Intake m_intake = new Intake();
@@ -53,6 +62,8 @@ public class RobotContainer {
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
+    IntakeCAM = CameraServer.startAutomaticCapture(OperatorConstants.ARM_CAMERA_PORT);
+    cameraSelection = NetworkTableInstance.getDefault().getTable("").getEntry("CameraSelection");
     // Configure the trigger bindings
     configureBindings();
   }
@@ -67,6 +78,10 @@ public class RobotContainer {
    * joysticks}.
    */
   private void configureBindings() {
+    m_driverController.start().onTrue(
+				new StartEndCommand(
+						() -> cameraSelection.setString(IntakeCAM.getName()),
+						() -> cameraSelection.setString(IntakeCAM.getName())));
     // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
     m_DriveTrain.setDefaultCommand(
       new RunCommand(
