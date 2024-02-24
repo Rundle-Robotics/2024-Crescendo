@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -162,10 +163,10 @@ public class RobotContainer {
 
         m_operatorController.povUp().whileTrue(
 
-          Commands.sequence(
+          new SequentialCommandGroup(
             new RaiseToPosition(m_armmotor),
 
-            new StartEndCommand(() -> m_intake.setspeed(0.1), () -> m_intake.stop(), m_intake)
+            new StartEndCommand(() -> m_intake.setspeed(0.2), () -> m_intake.stop(), m_intake)
             .withTimeout(1),
       
             new WaitCommand(3),
