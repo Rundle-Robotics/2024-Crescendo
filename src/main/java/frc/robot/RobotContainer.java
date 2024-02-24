@@ -143,6 +143,18 @@ public class RobotContainer {
           .andThen(new IntakeShooterCommand(m_intake))
           .handleInterrupt(() -> m_shootermotor.stop())
         );
+
+           m_operatorController.povUp().whileTrue(
+          new RaiseToPosition(m_armmotor)
+          .andThen(() ->m_intake.setspeed(0.1))
+          .withTimeout(1)
+          .andThen (() -> m_intake.stop())
+          .withTimeout(3)
+          .andThen(() -> m_intake.setspeed(-0.5))
+          .withTimeout(3)
+          .andThen(() -> m_intake.stop())
+          .handleInterrupt(()-> m_armmotor.stop())
+          .handleInterrupt(()-> m_intake.stop()));
               
         
 
