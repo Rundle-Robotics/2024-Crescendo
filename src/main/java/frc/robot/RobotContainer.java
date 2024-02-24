@@ -5,6 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -144,17 +145,37 @@ public class RobotContainer {
           .handleInterrupt(() -> m_shootermotor.stop())
         );
 
-           m_operatorController.povUp().whileTrue(
-          new RaiseToPosition(m_armmotor)
-          .andThen(() ->m_intake.setspeed(0.1))
-          .withTimeout(1)
-          .andThen (() -> m_intake.stop())
-          .withTimeout(3)
-          .andThen(() -> m_intake.setspeed(-0.5))
-          .withTimeout(3)
-          .andThen(() -> m_intake.stop())
-          .handleInterrupt(()-> m_armmotor.stop())
-          .handleInterrupt(()-> m_intake.stop()));
+        // m_operatorController.povUp().whileTrue(
+        //   new RaiseToPosition(m_armmotor)
+        //   .andThen(() ->m_intake.setspeed(0.1))
+        //   .withTimeout(1)
+        //   .andThen (() -> m_intake.stop())
+        //   .withTimeout(3)
+        //   .andThen(() -> m_intake.setspeed(-0.5))
+        //   .withTimeout(3)
+        //   .andThen(() -> m_intake.stop())
+        //   .handleInterrupt(()-> m_armmotor.stop())
+        //   .handleInterrupt(()-> m_intake.stop())
+        // );
+
+        m_operatorController.povUp().whileTrue(
+
+          Commands.sequence(
+            new RaiseToPosition(m_armmotor),
+
+            Commands.startEnd(() -> m_intake.setspeed(0.1), () -> m_intake.stop(), m_intake)
+            .withTimeout(1),
+      
+            Commands.waitSeconds(3),
+      
+            Commands.startEnd(() -> m_intake.setspeed(-0.5), () -> m_intake.stop(), m_intake)
+            .withTimeout(3)
+            
+          ).handleInterrupt(
+            () -> {m_intake.stop(); m_armmotor.stop();}
+          )
+
+        );
               
         
 
