@@ -5,7 +5,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.StartEndCommand;
@@ -164,12 +164,21 @@ public class RobotContainer {
         m_operatorController.povUp().whileTrue(
 
           new SequentialCommandGroup(
-            new RaiseToPosition(m_armmotor),
 
-            new StartEndCommand(() -> m_intake.setspeed(0.2), () -> m_intake.stop(), m_intake)
-            .withTimeout(1),
-      
-            new WaitCommand(3),
+            new ParallelCommandGroup(
+               new RaiseToPosition(m_armmotor),
+               
+               new SequentialCommandGroup(
+
+                  new WaitCommand(1), //Time raising before intaking
+
+                  new StartEndCommand(() -> m_intake.setspeed(0.2), () -> m_intake.stop(), m_intake)
+                  .withTimeout(1)     //time to intake. Will stop intaking after the time specified
+               )
+            ),
+
+            // will not reach this until both the arm has raised and the intake has done its pause and spin
+            new WaitCommand(1),
       
             new StartEndCommand(() -> m_intake.setspeed(-0.5), () -> m_intake.stop(), m_intake)
             .withTimeout(3)
