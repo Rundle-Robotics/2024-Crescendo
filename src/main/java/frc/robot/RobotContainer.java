@@ -7,6 +7,8 @@ package frc.robot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
@@ -163,12 +165,12 @@ public class RobotContainer {
           Commands.sequence(
             new RaiseToPosition(m_armmotor),
 
-            Commands.startEnd(() -> m_intake.setspeed(0.1), () -> m_intake.stop(), m_intake)
+            new StartEndCommand(() -> m_intake.setspeed(0.1), () -> m_intake.stop(), m_intake)
             .withTimeout(1),
       
-            Commands.waitSeconds(3),
+            new WaitCommand(3),
       
-            Commands.startEnd(() -> m_intake.setspeed(-0.5), () -> m_intake.stop(), m_intake)
+            new StartEndCommand(() -> m_intake.setspeed(-0.5), () -> m_intake.stop(), m_intake)
             .withTimeout(3)
             
           ).handleInterrupt(
