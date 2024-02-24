@@ -12,12 +12,15 @@ public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
     Spark M1;
     boolean bottomSwitch;
+    ArmMotor arm;
 
   public Intake() {
     M1 = new Spark(2);
+    arm = new ArmMotor();
+
   }
   public void setspeed(double speed) {
-    bottomSwitch = ArmMotor.getBottomSwitch();
+    bottomSwitch = arm.getBottomLimitSwitch();
     if(bottomSwitch == false){
       M1.set(speed);
     }
