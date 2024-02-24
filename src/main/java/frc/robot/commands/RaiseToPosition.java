@@ -28,7 +28,7 @@ public class RaiseToPosition extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    arm.SetArmSpeed(-0.2);
+    arm.SetArmSpeed(-0.1);
   }
 
   // Called once the command ends or is interrupted.

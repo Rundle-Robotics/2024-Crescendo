@@ -37,7 +37,7 @@ public class ArmMotor extends SubsystemBase {
     speed = 0; 
    }
 
-   armMotorOne.set(speed);
+   armMotorOne.set(1.5*speed);
    armMotorTwo.set(-speed);
   }
 
