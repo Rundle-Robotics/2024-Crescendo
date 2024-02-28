@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.FineTune;
 import frc.robot.commands.LimeTrackMecanum;
 import frc.robot.commands.ShooterCommand;
 import frc.robot.commands.IntakeShooterCommand;
@@ -27,6 +28,7 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.JamalShooter;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -83,6 +85,10 @@ public class RobotContainer {
         .b()
         .whileTrue(
             new LimeTrackMecanum(m_DriveTrain, m_limelight));
+
+    m_driverController
+        .rightTrigger()
+        .whileTrue(new FineTune(m_DriveTrain));
     m_operatorController
         .rightBumper()
         .whileTrue(
