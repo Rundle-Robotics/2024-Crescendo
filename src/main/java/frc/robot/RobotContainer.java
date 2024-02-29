@@ -273,7 +273,16 @@ public class RobotContainer {
         .withTimeout(1)
         .andThen(new IntakeShooterCommand(m_intake))
         .andThen(new StopShooter(m_shootermotor, m_intake))
-        .andThen(new AutoY(0, -20, 0, m_DriveTrain))
+        .andThen(new LowerToPosition(m_armmotor))
+        .andThen(new ParallelCommandGroup(
+          new StartEndCommand(() -> m_intake.setspeed(1), () -> m_intake.stop(), m_intake)
+          .withTimeout(2),
+           new AutoY(0, -20, 0, m_DriveTrain)))
+        .andThen(new AutoY(0, 20, 0, m_DriveTrain))
+        .andThen((new ShooterCommand(m_shootermotor)))
+        .withTimeout(1)
+        .andThen(new IntakeShooterCommand(m_intake))
+        .andThen(new StopShooter(m_shootermotor, m_intake))
         .handleInterrupt(() -> m_shootermotor.stop())
         .handleInterrupt(() -> AutoY.stop()));
       
