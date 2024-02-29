@@ -270,8 +270,9 @@ public class RobotContainer {
 
       case driveBackwardsAndShoot:
         com = ((new ShooterCommand(m_shootermotor))
-        .withTimeout(1)
+          .withTimeout(1)
         .andThen(new IntakeShooterCommand(m_intake))
+          .withTimeout(1)
         .andThen(new StopShooter(m_shootermotor, m_intake))
         .andThen(new LowerToPosition(m_armmotor))
         .andThen(new ParallelCommandGroup(
@@ -279,9 +280,11 @@ public class RobotContainer {
           .withTimeout(2),
            new AutoY(0, -20, 0, m_DriveTrain)))
         .andThen(new AutoY(0, 20, 0, m_DriveTrain))
+        .andThen(new RaiseToPosition(m_armmotor))
         .andThen((new ShooterCommand(m_shootermotor)))
-        .withTimeout(1)
+          .withTimeout(1)
         .andThen(new IntakeShooterCommand(m_intake))
+          .withTimeout(1)
         .andThen(new StopShooter(m_shootermotor, m_intake))
         .handleInterrupt(() -> m_shootermotor.stop())
         .handleInterrupt(() -> AutoY.stop()));
