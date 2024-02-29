@@ -33,6 +33,10 @@ public class LimeTrackMecanum extends Command {
     
 		finite = false;
 
+    limelight.setPipeline(0);
+
+    //arpil tag pipeline liekly a placeholder value for now --gonna makee pipelines for each tag i think 
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -83,6 +87,9 @@ public class LimeTrackMecanum extends Command {
   public void end(boolean interrupted) {
 
    System.out.println("command done");
+   limelight.setPipeline(2);
+
+   //driver pipeline 
   }
 
   // Returns true when the command should end.
