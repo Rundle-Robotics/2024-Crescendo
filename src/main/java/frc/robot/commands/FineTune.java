@@ -23,13 +23,13 @@ public class FineTune extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    DriveTrain.setFineTune(true);
+    dt.setFineTune(true);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    DriveTrain.setFineTune(false);
+    dt.setFineTune(false);
   }
 
   // Returns true when the command should end.
