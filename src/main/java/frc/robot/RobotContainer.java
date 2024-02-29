@@ -119,7 +119,7 @@ public class RobotContainer {
             .whileTrue(
               new RunCommand(
               () ->
-              m_intake.setspeed(0.9),
+              m_intake.setspeed(1),
               m_intake
               )
               .handleInterrupt(()-> m_intake.stop()));
@@ -165,7 +165,7 @@ public class RobotContainer {
         .a()
         .whileTrue(
           new ShooterCommand(m_shootermotor)
-          .withTimeout(1)
+          .withTimeout(0.7)
           .andThen(new IntakeShooterCommand(m_intake))
           .handleInterrupt(() -> m_shootermotor.stop())
         );
@@ -183,27 +183,33 @@ public class RobotContainer {
         //   .handleInterrupt(()-> m_intake.stop()2
         // );
 
-        m_operatorController.povUp().whileTrue(
-
+        m_operatorController.povUp().onTrue(
+        //   new RaiseToPosition(m_armmotor)
+        //   .andThen(() -> m_intake.setspeed(1))
+        //   .withTimeout(2)
+        //   .andThen(() -> m_intake.stop())
+        //   .handleInterrupt(() -> m_intake.stop())
+        //   .handleInterrupt(() -> m_intake.stop())
+        // );
+        
+ 
           new SequentialCommandGroup(
 
             new ParallelCommandGroup(
                new RaiseToPosition(m_armmotor),
                
                new SequentialCommandGroup(
-
-                  new WaitCommand(1), //Time raising before intaking
-
-                  new StartEndCommand(() -> m_intake.setspeed(0.2), () -> m_intake.stop(), m_intake)
-                  .withTimeout(1)     //time to intake. Will stop intaking after the time specified
+                  new WaitCommand(2),
+                  new StartEndCommand(() -> m_intake.setspeed(1), () -> m_intake.stop(), m_intake)
+                  .withTimeout(0.14)     //time to intake. Will stop intaking after the time specified
                )
             ),
 
             // will not reach this until both the arm has raised and the intake has done its pause and spin
-            new WaitCommand(1),
+            new WaitCommand(0.2),
       
-            new StartEndCommand(() -> m_intake.setspeed(-0.5), () -> m_intake.stop(), m_intake)
-            .withTimeout(3)
+            new StartEndCommand(() -> m_intake.setspeed(-1), () -> m_intake.stop(), m_intake)
+            .withTimeout(1)
             
           ).handleInterrupt(
             () -> {m_intake.stop(); m_armmotor.stop();}
