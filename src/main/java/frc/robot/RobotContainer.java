@@ -61,6 +61,7 @@ public class RobotContainer {
   private String[] autoList = {"Do Nothing", "Shoot", "Drive Backwards and Shoot",
    "Move Back", "Timed Turn", "Back then Forward"};
   private String autoSelected;
+
   
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
@@ -73,11 +74,12 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-    configureBindings();
-
     SmartDashboard.putStringArray("Auto List", autoList);
     autoSelected = SmartDashboard.getString("Auto List", "None");
     
+    configureBindings();
+
+ 
   }
 
   /**
@@ -232,7 +234,7 @@ public class RobotContainer {
     Command com = null;
     switch(autoSelected) {
       case "None":
-        com = null;
+        return null;
 
       case "Shoot":
         com = new SequentialCommandGroup(
@@ -272,7 +274,11 @@ public class RobotContainer {
         );
     }
 
-
+    System.out.println(com);
+    System.out.println(autoSelected);
     return com;
   }
 }
+
+
+  
