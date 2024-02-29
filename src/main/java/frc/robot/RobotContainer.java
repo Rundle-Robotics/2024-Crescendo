@@ -4,15 +4,27 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.StartEndCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoStrafe;
 import frc.robot.commands.AutoY;
+
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.FineTune;
 import frc.robot.commands.LimeTrackMecanum;
 import frc.robot.commands.ShooterCommand;
+import frc.robot.commands.StopShooter;
 import frc.robot.commands.IntakeShooterCommand;
-
+import frc.robot.commands.LowerToPosition;
+import frc.robot.commands.RaiseToPosition;
 
 import frc.robot.subsystems.ArmMotor;
 import frc.robot.subsystems.DriveTrain;
@@ -20,12 +32,16 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.JamalShooter;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
+import edu.wpi.first.wpilibj.Watchdog;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -40,6 +56,11 @@ public class RobotContainer {
   public final Intake m_intake = new Intake();
   public final ArmMotor m_armmotor = new ArmMotor();
   public final JamalShooter m_shootermotor = new JamalShooter();
+  private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  
+  private String[] autoList = {"Do Nothing", "Shoot", "Drive Backwards"};
+  private String autoSelected;
+  
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public static final CommandXboxController m_driverController =
@@ -52,6 +73,10 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
+    SmartDashboard.putStringArray("Auto List", autoList);
+    autoSelected = SmartDashboard.getString("Auto List", "None");
+    
   }
 
   /**
@@ -68,16 +93,28 @@ public class RobotContainer {
     m_DriveTrain.setDefaultCommand(
       new RunCommand(
         ()->
-        m_DriveTrain.mecanumDrive(-m_driverController.getLeftX(), m_driverController.getRightX(),
+        m_DriveTrain.mecanumDrive(-m_driverController.getLeftX(), m_driverController.getRightX()/1.3,
          -m_driverController.getLeftY()), m_DriveTrain));
 
     m_driverController
         .b()
         .whileTrue(
             new LimeTrackMecanum(m_DriveTrain, m_limelight));
-        // x is intake
+
     m_driverController
-            .x()
+        .rightTrigger()
+        .whileTrue(new FineTune(m_DriveTrain));
+    m_operatorController
+        .rightBumper()
+        .whileTrue(
+            new RaiseToPosition(m_armmotor));
+     m_operatorController
+        .leftBumper()
+        .whileTrue(
+            new LowerToPosition(m_armmotor));
+        // x is intake
+    m_operatorController
+            .rightTrigger()
             .whileTrue(
               new RunCommand(
               () ->
@@ -86,8 +123,8 @@ public class RobotContainer {
               )
               .handleInterrupt(()-> m_intake.stop()));
         // y is eject
-      m_driverController
-            .y()
+      m_operatorController
+            .leftTrigger()
             .whileTrue(
               new RunCommand(
               () ->
@@ -98,30 +135,11 @@ public class RobotContainer {
 
           // left bumper and right bumper to move arm, will reset after not held
           // left 
-      m_driverController
-            .leftBumper()
-            .whileTrue(
-              new RunCommand(
-                () ->
-                m_armmotor.SetArmSpeed(0.3),
-                m_armmotor
-                )
-                .handleInterrupt(()-> m_armmotor.stop()));
           // right
-      m_driverController
-            .rightBumper()
-            .whileTrue(
-              new RunCommand(
-                () ->
-                m_armmotor.SetArmSpeed(-0.3),
-                m_armmotor
-                )
-                .handleInterrupt(()-> m_armmotor.stop()));
-
             // will use right and left triggers for shooter
             // right
-        m_driverController
-              .rightTrigger()
+        m_operatorController
+              .y()
               .whileTrue(
                 new RunCommand(
                   () ->
@@ -130,9 +148,9 @@ public class RobotContainer {
                   m_shootermotor
                   )
                   .handleInterrupt(()-> m_shootermotor.stop()));
-            // left
-        m_driverController
-              .leftTrigger()
+            //left
+        m_operatorController
+            .x()
               .whileTrue(
                 new RunCommand(
                   ()->
@@ -142,12 +160,58 @@ public class RobotContainer {
                   .handleInterrupt(()-> m_shootermotor.stop()));
 
 
-        m_driverController.a().whileTrue(
+        m_operatorController
+        .a()
+        .whileTrue(
           new ShooterCommand(m_shootermotor)
           .withTimeout(1)
           .andThen(new IntakeShooterCommand(m_intake))
           .handleInterrupt(() -> m_shootermotor.stop())
         );
+
+        // m_operatorController.povUp().whileTrue(
+        //   new RaiseToPosition(m_armmotor)
+        //   .andThen(() ->m_intake.setspeed(0.1))
+        //   .withTimeout(1)
+        //   .andThen (() -> m_intake.stop())
+        //   .withTimeout(3)
+        //   .andThen(() -> m_intake.setspeed(-0.5))
+        //   .withTimeout(3)
+        //   .andThen(() -> m_intake.stop())
+        //   .handleInterrupt(()-> m_armmotor.stop())
+        //   .handleInterrupt(()-> m_intake.stop()2
+        // );
+
+        m_operatorController.povUp().whileTrue(
+
+          new SequentialCommandGroup(
+
+            new ParallelCommandGroup(
+               new RaiseToPosition(m_armmotor),
+               
+               new SequentialCommandGroup(
+
+                  new WaitCommand(1), //Time raising before intaking
+
+                  new StartEndCommand(() -> m_intake.setspeed(0.2), () -> m_intake.stop(), m_intake)
+                  .withTimeout(1)     //time to intake. Will stop intaking after the time specified
+               )
+            ),
+
+            // will not reach this until both the arm has raised and the intake has done its pause and spin
+            new WaitCommand(1),
+      
+            new StartEndCommand(() -> m_intake.setspeed(-0.5), () -> m_intake.stop(), m_intake)
+            .withTimeout(3)
+            
+          ).handleInterrupt(
+            () -> {m_intake.stop(); m_armmotor.stop();}
+          )
+
+        );
+              
+        
+
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
   }
@@ -157,15 +221,35 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return (new AutoY(0, 20, 0, m_DriveTrain)
-    .andThen(new AutoStrafe(0,0,1,m_DriveTrain))
-      .withTimeout(1)
-    .andThen(new AutoStrafe(0,0,0,m_DriveTrain))
-    .andThen(new ShooterCommand(m_shootermotor))
-      .withTimeout(1)
+
+    Command com = null;
+    switch(autoSelected) {
+      case "None":
+        com = null;
+
+      case "Shoot":
+        com = new SequentialCommandGroup(
+          new ShooterCommand(m_shootermotor),
+          new WaitCommand(1),
+          new IntakeShooterCommand(m_intake),
+          new WaitCommand(1),
+          new StopShooter(m_shootermotor, m_intake)
+        );
+
+      case "Do Nothing":
+        com = null;
+      case "Drive Backwards":
+        
+        
+        com = (new AutoY(0, 20, 0, m_DriveTrain)
+        .andThen(new AutoStrafe(0,0,1,m_DriveTrain))
+        .withTimeout(1)
+        .andThen(new AutoStrafe(0,0,0,m_DriveTrain))
+        .andThen(new ShooterCommand(m_shootermotor))
+        .withTimeout(1)
         .andThen(new IntakeShooterCommand(m_intake))
-          .handleInterrupt(() -> m_shootermotor.stop())
-    .handleInterrupt(() -> AutoY.stop()));
+        .handleInterrupt(() -> m_shootermotor.stop())
+        .handleInterrupt(() -> AutoY.stop()));
 
     /* 
     return (new AutoStrafe(0, 0.5, 0, m_DriveTrain))
@@ -176,5 +260,7 @@ public class RobotContainer {
     .andThen(new IntakeShooterCommand(m_intake))
     .handleInterrupt(() -> m_shootermotor.stop()));
     // An example command will be run in autonomous */
+    }
+    return com;
   }
 }
