@@ -9,10 +9,12 @@ import frc.robot.subsystems.JamalShooter;
 
 public class StopShooter extends Command {
   JamalShooter shooter;
+  Intake intake;
   /** Creates a new StopShooter. */
-  public StopShooter(JamalShooter s) {
+  public StopShooter(JamalShooter s, Intake i) {
     // Use addRequirements() here to declare subsystem dependencies.
     shooter = s;
+    intake = i;
   }
 
   // Called when the command is initially scheduled.
@@ -23,6 +25,7 @@ public class StopShooter extends Command {
   @Override
   public void execute() {
     JamalShooter.stop();
+    Intake.stop();
   }
 
   // Called once the command ends or is interrupted.
