@@ -210,5 +210,5 @@ public class DriveTrain extends SubsystemBase {
     public static void setFineTune(boolean value) {
         finetuned = value;
     }
-    
+    public void stop() { mecanumDrive(0, 0, 0);}
 }

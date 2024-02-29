@@ -58,7 +58,8 @@ public class RobotContainer {
   public final JamalShooter m_shootermotor = new JamalShooter();
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   
-  private String[] autoList = {"Do Nothing", "Shoot", "Drive Backwards"};
+  private String[] autoList = {"Do Nothing", "Shoot", "Drive Backwards and Shoot",
+   "Move Back", "Timed Turn", "Back then Forward"};
   private String autoSelected;
   
 
@@ -238,29 +239,34 @@ public class RobotContainer {
 
       case "Do Nothing":
         com = null;
-      case "Drive Backwards":
-        
-        
-        com = (new AutoY(0, 20, 0, m_DriveTrain)
-        .andThen(new AutoStrafe(0,0,1,m_DriveTrain))
-        .withTimeout(1)
-        .andThen(new AutoStrafe(0,0,0,m_DriveTrain))
-        .andThen(new ShooterCommand(m_shootermotor))
+
+      case "Drive Backwards and Shoot":
+        com = ((new ShooterCommand(m_shootermotor))
         .withTimeout(1)
         .andThen(new IntakeShooterCommand(m_intake))
+        .andThen(new StopShooter(m_shootermotor, m_intake))
+        .andThen(new AutoY(0, -20, 0, m_DriveTrain))
         .handleInterrupt(() -> m_shootermotor.stop())
         .handleInterrupt(() -> AutoY.stop()));
+      
+      case "Move Back":
+        com = ((new AutoY(0, -20, 0, m_DriveTrain))
+        .handleInterrupt(() -> AutoY.stop()));
 
-    /* 
-    return (new AutoStrafe(0, 0.5, 0, m_DriveTrain))
-    .andThen(new WaitCommand(2))
-    .andThen(new AutoStrafe(0, 0, 0, m_DriveTrain))
-    .andThen(new ShooterCommand(m_shootermotor)
-    .withTimeout(1)
-    .andThen(new IntakeShooterCommand(m_intake))
-    .handleInterrupt(() -> m_shootermotor.stop()));
-    // An example command will be run in autonomous */
+      case "Timed Turn":
+        com = ((new AutoStrafe(0, 0, 1, m_DriveTrain))
+        .andThen(new WaitCommand(1))
+        .handleInterrupt(() -> m_DriveTrain.stop()));
+      
+      case "Back then Forward":
+        com = ((new AutoY(0, -20, 0, m_DriveTrain))
+        .andThen(new WaitCommand(1))
+        .andThen(new AutoY(0, 20, 0, m_DriveTrain))
+        .andThen(new WaitCommand(1))
+        );
     }
+
+
     return com;
   }
 }
