@@ -230,7 +230,7 @@ public class RobotContainer {
           new WaitCommand(1),
           new IntakeShooterCommand(m_intake),
           new WaitCommand(1),
-          new StopShooter(m_shootermotor)
+          new StopShooter(m_shootermotor, m_intake)
         );
 
       case "Do Nothing":
