@@ -35,6 +35,7 @@ import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.wpilibj.Watchdog;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -58,11 +59,22 @@ public class RobotContainer {
   public final JamalShooter m_shootermotor = new JamalShooter();
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
   
-  private String[] autoList = {"Do Nothing", "Shoot", "Drive Backwards and Shoot",
-   "Move Back", "Timed Turn", "Back then Forward"};
+
+  private static final String doNothing = "Do Nothing";
+  private static final String shoot = "Shoot";
+  private static final String driveBackwardsAndShoot = "Drive Backwards And Shoot";
+
+  private static final String moveBack = "Move Back";
+
+  private static final String timedTurn = "Timed Turn";
+  private static final String backThenForward = "Back Then Forward";
+
   private String autoSelected;
 
-  
+  SendableChooser<String> m_autoChooser = new SendableChooser<>();
+
+ 
+
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public static final CommandXboxController m_driverController =
@@ -74,9 +86,15 @@ public class RobotContainer {
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
-    SmartDashboard.putStringArray("Auto List", autoList);
-    autoSelected = SmartDashboard.getString("Auto List", "None");
-    
+  
+    m_autoChooser.setDefaultOption("Do Nothing", doNothing);
+    m_autoChooser.addOption("Shoot", shoot);
+    m_autoChooser.addOption("Drive Backwards And Shoot", driveBackwardsAndShoot);
+    m_autoChooser.addOption("Move Back", moveBack);
+    m_autoChooser.addOption("Timed Turn", timedTurn);
+    m_autoChooser.addOption("Back Then Forward", backThenForward);
+
+    SmartDashboard.putData(m_autoChooser);
     configureBindings();
 
  
@@ -231,12 +249,15 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
 
-    Command com = null;
-    switch(autoSelected) {
-      case "None":
-        return null;
+    autoSelected = m_autoChooser.getSelected();
 
-      case "Shoot":
+    Command com = null;
+    switch(autoSelected) 
+    {
+      case doNothing:
+        com = null;
+
+      case shoot:
         com = new SequentialCommandGroup(
           new ShooterCommand(m_shootermotor),
           new WaitCommand(1),
@@ -245,10 +266,9 @@ public class RobotContainer {
           new StopShooter(m_shootermotor, m_intake)
         );
 
-      case "Do Nothing":
-        com = null;
 
-      case "Drive Backwards and Shoot":
+
+      case driveBackwardsAndShoot:
         com = ((new ShooterCommand(m_shootermotor))
         .withTimeout(1)
         .andThen(new IntakeShooterCommand(m_intake))
@@ -257,21 +277,24 @@ public class RobotContainer {
         .handleInterrupt(() -> m_shootermotor.stop())
         .handleInterrupt(() -> AutoY.stop()));
       
-      case "Move Back":
+      case moveBack:
         com = ((new AutoY(0, -20, 0, m_DriveTrain))
         .handleInterrupt(() -> AutoY.stop()));
 
-      case "Timed Turn":
+      case timedTurn:
         com = ((new AutoStrafe(0, 0, 1, m_DriveTrain))
         .andThen(new WaitCommand(1))
         .handleInterrupt(() -> m_DriveTrain.stop()));
       
-      case "Back then Forward":
+      case backThenForward:
         com = ((new AutoY(0, -20, 0, m_DriveTrain))
         .andThen(new WaitCommand(1))
         .andThen(new AutoY(0, 20, 0, m_DriveTrain))
         .andThen(new WaitCommand(1))
         );
+
+      default:
+        com = null;
     }
 
     System.out.println(com);

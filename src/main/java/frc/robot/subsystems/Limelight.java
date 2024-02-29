@@ -1,10 +1,10 @@
 package frc.robot.subsystems;
-import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Limelight extends SubsystemBase {
 
@@ -19,6 +19,7 @@ public class Limelight extends SubsystemBase {
 	private double apriltagid;
 	NetworkTableEntry pipeln;
 	public int pLine = 1; 
+	public int oldPline = 1;
 
 	private final SendableChooser<Integer> pipelineChooser = new SendableChooser<>();
 
@@ -28,6 +29,21 @@ public class Limelight extends SubsystemBase {
     table = NetworkTableInstance.getDefault().getTable("limelight");
 
 	pipeln = table.getEntry("getpipe");
+
+	pipelineChooser.setDefaultOption("Red Tag 1", 0); 
+    pipelineChooser.addOption("Red Tag 2", 1);
+    pipelineChooser.addOption("Red Tag 3", 2);
+    pipelineChooser.addOption("Red Loading Zone Tag 5", 5);
+
+    pipelineChooser.addOption("Blue Tag 6", 4);
+    pipelineChooser.addOption("Blue Tag 7", 6);
+    pipelineChooser.addOption("Blue Tag 8", 7);
+    pipelineChooser.addOption("Blue Loading Zone Tag 4", 5);
+
+    pipelineChooser.addOption("any april tag", 8);
+
+
+    SmartDashboard.putData("Choose Pipeline", pipelineChooser);
 		
   }
 
@@ -61,7 +77,6 @@ public class Limelight extends SubsystemBase {
 		SmartDashboard.putNumber("tlong", tlong);
 		SmartDashboard.putNumber("targetpose", targetpose_cameraspace[5]);
 
-		limelightCenter();
 
 		double tgtSeen = table.getEntry("tv").getDouble(0.0);
 		if (tgtSeen == 1.0) {
@@ -79,26 +94,16 @@ public class Limelight extends SubsystemBase {
 		
         //likely only need two tags for this to work, maybe 3 - dont want to track them all. 
 
-		pipelineChooser.setDefaultOption(
-        "Red Tag 1", 0); 
-    pipelineChooser.setDefaultOption("Red Tag 2", 1);
-    pipelineChooser.setDefaultOption("Red Tag 3", 2);
-    pipelineChooser.setDefaultOption("Red Loading Zone Tag 5", 5);
-
-    pipelineChooser.setDefaultOption("Blue Tag 6", 4);
-    pipelineChooser.setDefaultOption("Blue Tag 7", 6);
-    pipelineChooser.setDefaultOption("Blue Tag 8", 7);
-    pipelineChooser.setDefaultOption("Blue Loading Zone Tag 4", 5);
-
-    pipelineChooser.setDefaultOption("any april tag", 8);
-
-    
-
-    SmartDashboard.putData("Choose Pipeline", pipelineChooser);
+	
 
     pLine = pipelineChooser.getSelected().intValue();
 
-    NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(pLine);
+	if (pLine != oldPline)
+	{
+		NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(pLine);
+		oldPline = pLine;
+	}
+
     // This method will be called once per scheduler run
   }
 
