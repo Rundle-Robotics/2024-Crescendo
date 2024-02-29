@@ -13,10 +13,13 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AutoStrafe;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.FineTune;
 import frc.robot.commands.LimeTrackMecanum;
 import frc.robot.commands.ShooterCommand;
+import frc.robot.commands.StopShooter;
 import frc.robot.commands.IntakeShooterCommand;
 import frc.robot.commands.LowerToPosition;
 import frc.robot.commands.RaiseToPosition;
@@ -27,7 +30,10 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.JamalShooter;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
+import edu.wpi.first.wpilibj.Watchdog;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -48,6 +54,10 @@ public class RobotContainer {
   public final ArmMotor m_armmotor = new ArmMotor();
   public final JamalShooter m_shootermotor = new JamalShooter();
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  
+  private String[] autoList = {"Do Nothing", "Shoot", "Drive Backwards"};
+  private String autoSelected;
+  
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   public static final CommandXboxController m_driverController =
@@ -60,6 +70,10 @@ public class RobotContainer {
   public RobotContainer() {
     // Configure the trigger bindings
     configureBindings();
+
+    SmartDashboard.putStringArray("Auto List", autoList);
+    autoSelected = SmartDashboard.getString("Auto List", "None");
+    
   }
 
   /**
@@ -83,6 +97,10 @@ public class RobotContainer {
         .b()
         .whileTrue(
             new LimeTrackMecanum(m_DriveTrain, m_limelight));
+
+    m_driverController
+        .rightTrigger()
+        .whileTrue(new FineTune(m_DriveTrain));
     m_operatorController
         .rightBumper()
         .whileTrue(
@@ -201,7 +219,25 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return null;
-    // An example command will be run in autonomous
+    Command com = null;
+    switch(autoSelected) {
+      case "None":
+        com = null;
+
+      case "Shoot":
+        com = new SequentialCommandGroup(
+          new ShooterCommand(m_shootermotor),
+          new WaitCommand(1),
+          new IntakeShooterCommand(m_intake),
+          new WaitCommand(1),
+          new StopShooter(m_shootermotor, m_intake)
+        );
+
+      case "Do Nothing":
+        com = null;
+      case "Drive Backwards":
+        com = null;
+    }
+    return com;
   }
 }

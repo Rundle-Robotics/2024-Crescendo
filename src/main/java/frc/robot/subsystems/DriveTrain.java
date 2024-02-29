@@ -31,7 +31,7 @@ public class DriveTrain extends SubsystemBase {
     private double vel;
     private double pos;
     private double cpr;
-    public boolean finetuned;
+    public static boolean finetuned;
     private double powerInside;
     private static final double FRONT_LEFT_STRAFE_CORRECTION_CONSTANT = 0.085;
 	private static final double FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT = 0.085;
@@ -207,6 +207,8 @@ public class DriveTrain extends SubsystemBase {
         }
         return cpr;
     }
-    
+    public static void setFineTune(boolean value) {
+        finetuned = value;
+    }
     
 }

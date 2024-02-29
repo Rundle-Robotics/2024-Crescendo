@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class JamalShooter extends SubsystemBase {
   /** Creates a new Shooter. */
-  CANSparkMax shooterJamalMotor;
+  static CANSparkMax shooterJamalMotor;
   public JamalShooter() {
     shooterJamalMotor = new CANSparkMax(7, MotorType.kBrushless);
   }
@@ -20,5 +20,5 @@ public class JamalShooter extends SubsystemBase {
   public void shooterSpeed(double speed) {
     shooterJamalMotor.set(speed);
   }
-  public void stop() { shooterJamalMotor.set(0); }
+  public static void stop() { shooterJamalMotor.set(0); }
 }
