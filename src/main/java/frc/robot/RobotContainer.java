@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoStrafe;
+import frc.robot.commands.AutoY;
+
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.FineTune;
@@ -36,6 +38,7 @@ import edu.wpi.first.wpilibj.Watchdog;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -125,7 +128,7 @@ public class RobotContainer {
             .whileTrue(
               new RunCommand(
               () ->
-              m_intake.setspeed(-0.7 ),
+              m_intake.setspeed(-0.7),
               m_intake
               )
               .handleInterrupt(()-> m_intake.stop()));
@@ -212,13 +215,13 @@ public class RobotContainer {
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
   }
-
   /**
    * Use this to pass the autonomous command to the main {@link Robot} class.
    *
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
+
     Command com = null;
     switch(autoSelected) {
       case "None":
@@ -236,7 +239,27 @@ public class RobotContainer {
       case "Do Nothing":
         com = null;
       case "Drive Backwards":
-        com = null;
+        
+        
+        com = (new AutoY(0, 20, 0, m_DriveTrain)
+        .andThen(new AutoStrafe(0,0,1,m_DriveTrain))
+        .withTimeout(1)
+        .andThen(new AutoStrafe(0,0,0,m_DriveTrain))
+        .andThen(new ShooterCommand(m_shootermotor))
+        .withTimeout(1)
+        .andThen(new IntakeShooterCommand(m_intake))
+        .handleInterrupt(() -> m_shootermotor.stop())
+        .handleInterrupt(() -> AutoY.stop()));
+
+    /* 
+    return (new AutoStrafe(0, 0.5, 0, m_DriveTrain))
+    .andThen(new WaitCommand(2))
+    .andThen(new AutoStrafe(0, 0, 0, m_DriveTrain))
+    .andThen(new ShooterCommand(m_shootermotor)
+    .withTimeout(1)
+    .andThen(new IntakeShooterCommand(m_intake))
+    .handleInterrupt(() -> m_shootermotor.stop()));
+    // An example command will be run in autonomous */
     }
     return com;
   }
