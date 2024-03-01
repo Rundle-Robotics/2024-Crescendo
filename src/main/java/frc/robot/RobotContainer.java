@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AutoStrafe;
 import frc.robot.commands.AutoY;
+import frc.robot.commands.IntakeReverseCommand;
 
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
@@ -32,6 +33,8 @@ import frc.robot.subsystems.Limelight;
 import frc.robot.subsystems.JamalShooter;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.hal.FRCNetComm.tInstances;
 import edu.wpi.first.math.kinematics.SwerveDriveWheelPositions;
 import edu.wpi.first.wpilibj.Watchdog;
@@ -70,6 +73,7 @@ public class RobotContainer {
   private static final String backThenForward = "Back Then Forward";
 
   private String autoSelected;
+  private static UsbCamera cam;
 
   SendableChooser<String> m_autoChooser = new SendableChooser<>();
 
@@ -96,6 +100,8 @@ public class RobotContainer {
 
     SmartDashboard.putData(m_autoChooser);
     configureBindings();
+
+    cam = CameraServer.startAutomaticCapture(0);
 
  
   }
@@ -149,7 +155,7 @@ public class RobotContainer {
             .whileTrue(
               new RunCommand(
               () ->
-              m_intake.setspeed(-0.7),
+              m_intake.setspeed(-1),
               m_intake
               )
               .handleInterrupt(()-> m_intake.stop()));
@@ -185,9 +191,11 @@ public class RobotContainer {
         .a()
         .whileTrue(
           new ShooterCommand(m_shootermotor)
-          .withTimeout(0.7)
+          .withTimeout(0.5)
           .andThen(new IntakeShooterCommand(m_intake))
+          
           .handleInterrupt(() -> m_shootermotor.stop())
+         
         );
 
         // m_operatorController.povUp().whileTrue(
@@ -221,7 +229,7 @@ public class RobotContainer {
                new SequentialCommandGroup(
                   new WaitCommand(2),
                   new StartEndCommand(() -> m_intake.setspeed(1), () -> m_intake.stop(), m_intake)
-                  .withTimeout(0.14)     //time to intake. Will stop intaking after the time specified
+                  .withTimeout(0.15)     //time to intake. Will stop intaking after the time specified
                )
             ),
 
@@ -248,53 +256,88 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-
+    Command com = null;
     autoSelected = m_autoChooser.getSelected();
 
-    Command com = null;
     switch(autoSelected) 
     {
       case doNothing:
-        com = null;
+        return (new LowerToPosition(m_armmotor)
+        .withTimeout(4)
+        .handleInterrupt(()->m_armmotor.stop())
 
-      case shoot:
-        com = new SequentialCommandGroup(
+        );
+
+      case "Shoot":
+        return new SequentialCommandGroup(
           new ShooterCommand(m_shootermotor),
           new WaitCommand(1),
           new IntakeShooterCommand(m_intake),
           new WaitCommand(1),
           new StopShooter(m_shootermotor, m_intake)
         );
-
-
+        
 
       case driveBackwardsAndShoot:
-        com = ((new ShooterCommand(m_shootermotor))
+        return ((new ShooterCommand(m_shootermotor))
         .withTimeout(1)
         .andThen(new IntakeShooterCommand(m_intake))
-        .andThen(new StopShooter(m_shootermotor, m_intake))
-        .andThen(new AutoY(0, -20, 0, m_DriveTrain))
+        .withTimeout(3)
+        .andThen(() -> m_shootermotor.stop())
+        .andThen(new AutoY(0, -75, 0, m_DriveTrain))
+        .withTimeout(4)
+        
         .handleInterrupt(() -> m_shootermotor.stop())
-        .handleInterrupt(() -> AutoY.stop()));
-      
+        .handleInterrupt(() -> AutoY.stop())
+        
+
+        );
       case moveBack:
-        com = ((new AutoY(0, -20, 0, m_DriveTrain))
-        .handleInterrupt(() -> AutoY.stop()));
+      return ((new ShooterCommand(m_shootermotor))
+        .withTimeout(1)
+        .andThen(new IntakeShooterCommand(m_intake))
+        .withTimeout(3)
+        .andThen(() -> m_shootermotor.stop())
+        .andThen(new AutoY(0, -60, 0, m_DriveTrain))
+        .withTimeout(4)
+        .andThen(new LowerToPosition(m_armmotor)
+        .withTimeout(4)
+
+        .andThen(new IntakeReverseCommand(m_intake))
+        .withTimeout(2)
+        
+        
+        
+        .handleInterrupt(()->m_armmotor.stop())
+        )
+        
+        
+        // .andThen(new LowerToPosition(m_armmotor))
+        // .withTimeout(4)
+        
+        
+        
+        
+        // // .andThen(()->m_intake.stop())
+        // .handleInterrupt(()->m_armmotor.stop())
+        .handleInterrupt(()-> m_intake.stop())
+        .handleInterrupt(() -> AutoY.stop())
+        .handleInterrupt(() -> m_shootermotor.stop())
+        );
+
+        
 
       case timedTurn:
-        com = ((new AutoStrafe(0, 0, 1, m_DriveTrain))
+        return ((new AutoStrafe(0, 0, 1, m_DriveTrain))
         .andThen(new WaitCommand(1))
         .handleInterrupt(() -> m_DriveTrain.stop()));
       
       case backThenForward:
-        com = ((new AutoY(0, -20, 0, m_DriveTrain))
+        return ((new AutoY(0, -20, 0, m_DriveTrain))
         .andThen(new WaitCommand(1))
         .andThen(new AutoY(0, 20, 0, m_DriveTrain))
         .andThen(new WaitCommand(1))
         );
-
-      default:
-        com = null;
     }
 
     System.out.println(com);
