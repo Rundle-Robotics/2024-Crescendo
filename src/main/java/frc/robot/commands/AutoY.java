@@ -58,8 +58,8 @@ public class AutoY extends Command {
     currentY = meca.getMotorPosition(1);
     
     yspeed = pidy.calculate(currentY, targetPosY);
-    if (Math.abs(yspeed) > 0.2) {
-      yspeed = 0.2 * Math.signum(yspeed);
+    if (Math.abs(yspeed) > 0.3) {
+      yspeed = 0.3 * Math.signum(yspeed);
     }
     SmartDashboard.putNumber("y speed", yspeed);
     SmartDashboard.putBoolean("at setpoint", pidy.atSetpoint());

@@ -40,7 +40,7 @@ public final class Constants {
     public static final double MAX_ROBOT_SPEED = 0.75;
     public static final double MIN_ROBOT_SPEED = -1;
     public static final double MAX_TURN_SPEED = 0.7;
-    public static final double MAX_STRAFE_SPEED = 0.5;
+    public static final double MAX_STRAFE_SPEED = 0.75;
     public static final double kDriveTick2Meter = 1.0 / 4096.0 * 0.128 * Math.PI;
   }
 }

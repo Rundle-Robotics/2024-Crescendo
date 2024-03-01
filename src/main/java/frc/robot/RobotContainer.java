@@ -97,11 +97,15 @@ public class RobotContainer {
     m_autoChooser.addOption("Move Back", moveBack);
     m_autoChooser.addOption("Timed Turn", timedTurn);
     m_autoChooser.addOption("Back Then Forward", backThenForward);
+    m_autoChooser.addOption("Right", "SMBR");
+    m_autoChooser.addOption("Left", "SMBL");
 
     SmartDashboard.putData(m_autoChooser);
     configureBindings();
 
     cam = CameraServer.startAutomaticCapture(0);
+    
+    
 
  
   }
@@ -190,11 +194,14 @@ public class RobotContainer {
         m_operatorController
         .a()
         .whileTrue(
+          
+
           new ShooterCommand(m_shootermotor)
           .withTimeout(0.5)
           .andThen(new IntakeShooterCommand(m_intake))
           
           .handleInterrupt(() -> m_shootermotor.stop())
+         
          
         );
 
@@ -279,16 +286,17 @@ public class RobotContainer {
         
 
       case driveBackwardsAndShoot:
-        return ((new ShooterCommand(m_shootermotor))
+       return ((new ShooterCommand(m_shootermotor))
         .withTimeout(1)
         .andThen(new IntakeShooterCommand(m_intake))
         .withTimeout(3)
         .andThen(() -> m_shootermotor.stop())
-        .andThen(new AutoY(0, -75, 0, m_DriveTrain))
-        .withTimeout(4)
+        .andThen(new AutoY(0, -60, 0, m_DriveTrain))
+        
+       
         
         .handleInterrupt(() -> m_shootermotor.stop())
-        .handleInterrupt(() -> AutoY.stop())
+        
         
 
         );
@@ -301,25 +309,20 @@ public class RobotContainer {
         .andThen(new AutoY(0, -60, 0, m_DriveTrain))
         .withTimeout(4)
         .andThen(new LowerToPosition(m_armmotor)
-        .withTimeout(4)
+        .withTimeout(5)
 
-        .andThen(new IntakeReverseCommand(m_intake))
+        .andThen((new IntakeShooterCommand(m_intake))
         .withTimeout(2)
-        
-        
-        
+        .handleInterrupt(()->m_intake.stop()))
+
+        .andThen(new RaiseToPosition(m_armmotor))
+        .andThen(new AutoY(0, 60, 0, m_DriveTrain))
         .handleInterrupt(()->m_armmotor.stop())
         )
-        
-        
-        // .andThen(new LowerToPosition(m_armmotor))
-        // .withTimeout(4)
-        
-        
-        
-        
-        // // .andThen(()->m_intake.stop())
-        // .handleInterrupt(()->m_armmotor.stop())
+        // .withTimeout(2)
+        // .andThen(((new IntakeShooterCommand(m_intake)))
+        // .withTimeout(2)
+        // .andThen(()->m_intake.stop()))
         .handleInterrupt(()-> m_intake.stop())
         .handleInterrupt(() -> AutoY.stop())
         .handleInterrupt(() -> m_shootermotor.stop())
@@ -338,6 +341,38 @@ public class RobotContainer {
         .andThen(new AutoY(0, 20, 0, m_DriveTrain))
         .andThen(new WaitCommand(1))
         );
+
+      case "SMBR":
+      // for right side
+      return (new ShooterCommand(m_shootermotor))
+        .withTimeout(1)
+        .andThen(new IntakeShooterCommand(m_intake))
+        .withTimeout(3)
+        .andThen(() -> m_shootermotor.stop())
+        .andThen(new AutoY(0, -20, 0, m_DriveTrain))
+        .andThen(new AutoStrafe(0, 0, 1, m_DriveTrain))
+        .andThen(new WaitCommand(.2))
+        .andThen(() -> m_DriveTrain.stop())
+        .andThen(new AutoStrafe(0, .2, 0, m_DriveTrain))
+        
+        .handleInterrupt(() -> m_shootermotor.stop())
+        .handleInterrupt(() -> AutoY.stop());
+        
+      case "SMBL":
+      // for left side
+      return (new ShooterCommand(m_shootermotor))
+        .withTimeout(1)
+        .andThen(new IntakeShooterCommand(m_intake))
+        .withTimeout(3)
+        .andThen(() -> m_shootermotor.stop())
+        .andThen(new AutoY(0, -20, 0, m_DriveTrain))
+        .andThen(new AutoStrafe(0, 0, -1, m_DriveTrain))
+        .andThen(new WaitCommand(.2))
+        .andThen(() -> m_DriveTrain.stop())
+        .andThen(new AutoStrafe(0, .2, 0, m_DriveTrain))
+        
+        .handleInterrupt(() -> m_shootermotor.stop())
+        .handleInterrupt(() -> AutoY.stop());
     }
 
     System.out.println(com);
