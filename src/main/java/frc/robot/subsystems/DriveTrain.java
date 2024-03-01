@@ -33,10 +33,25 @@ public class DriveTrain extends SubsystemBase {
     private double cpr;
     public static boolean finetuned;
     private double powerInside;
-    private static final double FRONT_LEFT_STRAFE_CORRECTION_CONSTANT = 0.085;
-	private static final double FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT = 0.085;
-	private static final double BACK_RIGHT_STRAFE_CORRECTION_CONSTANT = 0;
-	private static final double BACK_LEFT_STRAFE_CORRECTION_CONSTANT = 0;
+    private static final double FORWARDS_FRONT_LEFT_STRAFE_CORRECTION_CONSTANT = 0.085;
+	private static final double FORWARDS_FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT = 0.085;
+	private static final double FORWARDS_BACK_RIGHT_STRAFE_CORRECTION_CONSTANT = 0;
+	private static final double FORWARDS_BACK_LEFT_STRAFE_CORRECTION_CONSTANT = 0;
+
+    private static final double BACKWARDS_FRONT_LEFT_CORRECTION_CONSTANT = 0;
+    private static final double BACKWARDS_FRONT_RIGHT_CORRECTION_CONSTANT = 0.0425;
+    private static final double BACKWARDS_BACK_LEFT_CORRECTION_CONSTANT = 0;
+    private static final double BACKWARDS_BACK_RIGHT_CORRECTION_CONSTANT = 0.0425;
+
+    private static final double LEFT_FRONT_LEFT_STRAFE_CORRECTION_CONSTANT = 0;
+	private static final double LEFT_FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT = 0;
+	private static final double LEFT_BACK_RIGHT_STRAFE_CORRECTION_CONSTANT = 0;
+	private static final double LEFT_BACK_LEFT_STRAFE_CORRECTION_CONSTANT = 0;
+
+    private static final double RIGHT_FRONT_LEFT_STRAFE_CORRECTION_CONSTANT = 0;
+	private static final double RIGHT_FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT = 0;
+	private static final double RIGHT_BACK_RIGHT_STRAFE_CORRECTION_CONSTANT = 0;
+	private static final double RIGHT_BACK_LEFT_STRAFE_CORRECTION_CONSTANT = 0;
 
     public DriveTrain() {
         finetuned = false;
@@ -129,19 +144,40 @@ public class DriveTrain extends SubsystemBase {
             backRight /= powerInside + (Math.abs(turnInside));
         }
 
-        if (y <= 0)
+        if (y < 0)
         {
-            frontLeft *= 1 + (FRONT_LEFT_STRAFE_CORRECTION_CONSTANT);
-		    frontRight *= 1 + (FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT);
-		    backLeft *= 1 + (BACK_LEFT_STRAFE_CORRECTION_CONSTANT);
-		    backRight *= 1 + (BACK_RIGHT_STRAFE_CORRECTION_CONSTANT);
+            // Forwards correction
+            frontLeft *= 1 + (FORWARDS_FRONT_LEFT_STRAFE_CORRECTION_CONSTANT);
+		    frontRight *= 1 + (FORWARDS_FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT);
+		    backLeft *= 1 + (FORWARDS_BACK_LEFT_STRAFE_CORRECTION_CONSTANT);
+		    backRight *= 1 + (FORWARDS_BACK_RIGHT_STRAFE_CORRECTION_CONSTANT);
+        } 
+        else if (y == 0) 
+        {
+            if (x > 0) 
+            {
+                // Right strafe correction
+                frontLeft *= 1 + (RIGHT_FRONT_LEFT_STRAFE_CORRECTION_CONSTANT);
+                frontRight *= 1 + (RIGHT_FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT);
+                backLeft *= 1 + (RIGHT_BACK_LEFT_STRAFE_CORRECTION_CONSTANT);
+                backRight *= 1 + (RIGHT_BACK_RIGHT_STRAFE_CORRECTION_CONSTANT);
+            } 
+            else 
+            {
+                // Left strafe correction
+                frontLeft *= 1 + (LEFT_FRONT_LEFT_STRAFE_CORRECTION_CONSTANT);
+                frontRight *= 1 + (LEFT_FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT);
+                backLeft *= 1 + (LEFT_BACK_LEFT_STRAFE_CORRECTION_CONSTANT);
+                backRight *= 1 + (LEFT_BACK_RIGHT_STRAFE_CORRECTION_CONSTANT);
+            }
         }
         else 
         {
-            frontLeft *= 1 + (BACK_RIGHT_STRAFE_CORRECTION_CONSTANT);
-		    frontRight *= 1 + (FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT/2);
-		    backLeft *= 1 + (BACK_RIGHT_STRAFE_CORRECTION_CONSTANT);
-		    backRight *= 1 + (FRONT_RIGHT_STRAFE_CORRECTION_CONSTANT/2);
+            // Backwards correction
+            frontLeft *= 1 + (BACKWARDS_FRONT_LEFT_CORRECTION_CONSTANT);
+		    frontRight *= 1 + (BACKWARDS_FRONT_RIGHT_CORRECTION_CONSTANT);
+		    backLeft *= 1 + (BACKWARDS_BACK_LEFT_CORRECTION_CONSTANT);
+		    backRight *= 1 + (BACKWARDS_BACK_RIGHT_CORRECTION_CONSTANT);
         }
         
         SmartDashboard.putNumber("frontRight", frontRight);
